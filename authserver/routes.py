@@ -1,7 +1,8 @@
 from authserver import app, pgresources, api
 
-app.config['SECRET_KEY'] = 'test-app'
 
-'''Resources'''
-api.add_resource(pgresources.UserRegistration, '/registration')
+"""Resources"""
+api.add_resource(pgresources.UserRegistration, '/v1/registration')
+api.add_resource(pgresources.UserLogin, '/v1/login')
+api.add_resource(pgresources.ProtectedRoute, '/v1/protected')
 
