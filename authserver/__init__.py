@@ -14,7 +14,7 @@ try:
 except Exception as e:
     print('Not able to connect server')
     print(e)
-
+#finally close the connection, use traceback module for exception -> traceback.print_exc()
 
 api = Api(app)
 jwt = JWTManager(app)
