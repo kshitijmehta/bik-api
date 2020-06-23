@@ -60,10 +60,11 @@ class changepass(Resource):
         if not res:
            return {"message": "Invalid credentials"}, 500
         if bcrypt.check_password_hash(res[0], password):
-           new_password = bcrypt.generate_password_hash(data['new_password']).decode('utf-8')
+           new_password = bcrypt.generateo_password_hash(data['new_password']).decode('utf-8')
 
            cur.execute(f'INSERT INTO public."user" (password) VALUES ('
                 f"'{str(new_password)}')")
     except Exception as e:
           print(e)
-          return {'message': 'cant change passwrord'}
+          print('test code')
+          return {'message': 'cant change password'}
