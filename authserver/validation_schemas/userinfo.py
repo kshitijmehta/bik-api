@@ -4,25 +4,40 @@ from jsonschema.exceptions import ValidationError
 user_schema = {
     "type": "object",
     "properties": {
-        "first_name": {
+        "f_name": {
             "type": "string"
         },
-        "last_name": {
+        "l_name": {
             "type": "string",
 
         },
-        "address": {
+        "gender": {
             "type": "string",
 
         },
-         "state": {
+         "dob ": {
+            "type": "string",
+        },
+         "line1": {
+            "type": "string",
+        },
+        "line2": {
+            "type": "string",
+        },
+        "line3": {
+            "type": "string",
+        },
+        "city": {
+            "type": "string",
+        },
+        "state": {
             "type": "string",
         },
         "country": {
             "type": "string"
         }
     },
-    "required": ["first_name", "last_name", "address", "state", "country"]
+    "required": ["f_name", "l_name", "gender", "DOB", "typecode" , "line1", "line2", "line3", "city", "state", "country"]
 }
 
 
