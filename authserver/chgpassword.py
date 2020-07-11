@@ -15,7 +15,8 @@ class changepass(Resource):
         if user_validation['isValid']:
 
             try:
-                args = {'user_id': 1}
+                identity = get_jwt_identity()
+                args = {'user_id': identity['id']}
                 result = run_db_query('select user_password from userPasswordSelect'
                                       '(%(user_id)s)', args, 'user password select from DB')
                 if not result:

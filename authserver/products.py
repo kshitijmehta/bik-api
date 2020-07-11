@@ -7,6 +7,40 @@ from flask_jwt_extended import create_access_token, create_refresh_token, jwt_re
 from authserver.connection import run_db_query
 
 
+class Productsizeinsert(Resource):
+    @jwt_required
+    def post(self):
+        data = request.get_jason()
+        try:
+            args = {'ser': 1, 'product_size': data['product_size'],
+                    'product_size_code': data['product_size_code']}
+
+            run_db_query('call spsizeInsertUpdateDelete ('
+                         '_ser=>%(ser)s, '
+                         '_code=>%(product_size_code)s, '
+                         '_value=>%(product_size)s, )', args, 'Admin enter product size in DB')
+            return{'message': 'Size and code Insert success'}, 200
+        except Exception as e:
+            print(e)
+            return {'message': 'Size and code Insert Error'}, 500
+
+class Productscolourinsert(Resource):
+    @jwt_required
+    def post(self):
+        data = request.get_jason()
+        try:
+            args = {'ser': 1, 'product_color_code': data['product_color_code'],
+                    'product_color': data['product_color']}
+
+            run_db_query('call spColourInsertUpdateDelete ('
+                         '_ser=>%(ser)s, '
+                         '_code=>%(product_color_code)s, '
+                         '_value=>%(product_color)s, )', args, 'Admin enter product color DB')
+            return{'message': 'Color and code Insert success'}, 200
+        except Exception as e:
+            print(e)
+            return {'message': 'Color and code Insert Error'}, 500
+
 class Productinfoinsert(Resource):
     @jwt_required
     def post(self):
@@ -16,36 +50,25 @@ class Productinfoinsert(Resource):
                     'product_INR_price': data['product_INR_price'],
                     'product_USD_price': data['product_USD_price'],
                     'product_Qty': data['product_Qty'],
-                    'product_size': data['product_size'],
-                    'product_color_code': data['product_color_code'],
-                    'product_color': data['product_color']}
+                    'product_size_code': data['product_size_code'],
+                    'product_color_code': data['product_color_code']
+                    }
             run_db_query('call spproductinsertupdatedelete ('
                          '_ser=>%(ser)s, '
                          '_subcategID=>%(product_subcateg_id)s, '
                          '_inrprice=>%(product_priceINR)s, '
                          '_usdprice=>%(product_USD_price)s, '
-                         '_colour=>%(product_color)s, '
-                         '_size=>%(product_size)s,)'
+                         '_colour=>%(product_color_code)s, '
+                         '_size=>%(product_size_code)s,)'
                          '_qty=>%(product_Qty)s,)',
                          args, 'Admin enter product details in DB')
-
-            run_db_query('call spsizeInsertUpdateDelete ('
-                         '_ser=>%(ser)s, '
-                         '_code=>%(product_size_code)s, '
-                         '_value=>%(product_size)s, )', args, 'Admin enter product size in DB')
-
-            run_db_query('call spColourInsertUpdateDelete ('
-                         '_ser=>%(ser)s, '
-                         '_code=>%(product_color_code)s, '
-                         '_value=>%(product_color)s, )', 'Admin enter product color DB')
-
 
             return {'message': 'Product details Insert success'}, 200
         except Exception as e:
             print(e)
             return {'message': 'Product details Insert Error'}, 500
 
-class Producttypeinsert(Resource):
+class Productsubcategoryinsert(Resource):
     @jwt_required
     def post(self):
         data = request.get_json()
@@ -64,16 +87,18 @@ class Producttypeinsert(Resource):
            print(e)
         return {'message': 'Product type insert error'}, 500
 
-class Producttypeupdate(Resource):
+class Productsubcategoryupdate(Resource):
     @jwt_required
     def post(self):
         data = request.get_json()
         try:
             args = {'ser': 2, 'product_category_id': '', 'product_name': data['product_name'],
-                    'product_desc': data['product_desc']}
+                    'product_desc': data['product_desc'],
+                    'product_subcategory_id': data['product_subcategory_id']}
 
             run_db_query('call spProdTypeInsertUpdateDelete ('
                      '_ser=>%(ser)s, '
+                     '_subcateg_id=>%(product_subcategory_id)s, '
                      '_name=>%(product_name)s, '
                      '_desc=>%(product_desc)s,)',
                      args, 'Admin update product type in DB')
@@ -81,7 +106,6 @@ class Producttypeupdate(Resource):
         except Exception as e:
            print(e)
         return {'message': 'Product type update error'}, 500
-
 
 
 class Productinfouppdate(Resource):
@@ -93,15 +117,15 @@ class Productinfouppdate(Resource):
                     'product_INR_price': data['product_INR_price'],
                     'product_USD_price': data['product_USD_price'],
                     'product_Qty': data['product_Qty'],
-                    'product_size': data['product_size'],
-                    'product_color': data['product_color']}
+                    'product_size_code': data['product_size_code'],
+                    'product_color_code': data['product_color_code']}
             run_db_query('call spproductinsertupdatedelete ('
                          '_ser=>%(ser)s, '
                          '_subcategID=>%(product_subcateg_id)s, '
                          '_inrprice=>%(product_priceINR)s, '
                          '_usdprice=>%(product_USD_price)s, '
-                         '_colour=>%(product_color)s, '
-                         '_size=>%(product_size)s,)'
+                         '_colour=>%(product_color_code)s, '
+                         '_size=>%(product_size_code)s,)'
                          '_qty=>%(product_Qty)s,)',
                      args, 'Admin Updated product details in DB')
 

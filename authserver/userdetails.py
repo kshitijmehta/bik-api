@@ -11,7 +11,8 @@ class Userinfo(Resource):
     @jwt_required
     def get(self):
         try:
-            args = {'user_id': '1'}
+            identity = get_jwt_identity()
+            args = {'user_id': identity['id']}
             result = run_db_query('select * from PersonalInfoSelect'
                                   '(%(user_id)s)', args, 'user info select from DB')
             if not result:
@@ -27,13 +28,17 @@ class Userinfo(Resource):
          data = request.get_json()
          user_validation = userinfo.validate_user(data)
          if user_validation['isValid']:
+            identity = get_jwt_identity()
+
+
             try:
-                    args = {'ser': 2, 'f_name': data['f_name'], 'l_name': data['l_name'],
+                    args = {'ser': 2, 'user_id': identity['id'],
+                            'f_name': data['f_name'], 'l_name': data['l_name'],
                             'gender': data['gender'], 'dob': data['dob'],
                             'typecode': 'c', 'line1': data['line1'],
-                            'line2': data['line2'], "line3": data['line3'],
+                            'line2': data['line2'], 'line3': data['line3'],
                             'city': data['city'], 'state': data['state'],
-                            "country": data['country']}
+                            'country': data['country']}
 
                     run_db_query('call spUserInsertUpdate ('
                                  '_ser=>%(ser)s, '
@@ -43,18 +48,21 @@ class Userinfo(Resource):
                                  '_dob=>%(dob)s )',
                                  args, 'user enter details in DB')
 
-                    args['ser'] = 1
+                    address = data['address_id']
+                    if not address:
+                          args['ser'] = 1
+                    else:
+                          args['ser'] = 2
                     run_db_query('call spaddressinsertupdatedelete ('
                                  '_ser=>%(ser)s, '
                                  '_typecode=>%(typecode)s, '
                                  '_line1=>%(line1)s, '
                                  '_line2=>%(line2)s, '
-                                 '_line3=>%(gline3)s,'
+                                 '_line3=>%(line3)s,'
                                  '_city=>%(city)s'
                                  '_state=>%(state)s'
                                  '_country=>%(country)s)',
-                                 args, 'user enter details in DB')
-
+                                 args, 'user enter/update address in DB')
                     return {'message': 'user personal detail add success'}, 200
             except Exception as e:
                         print(e)
