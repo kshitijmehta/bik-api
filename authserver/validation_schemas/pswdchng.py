@@ -4,12 +4,14 @@ from jsonschema.exceptions import ValidationError
 user_schema = {
     "type": "object",
     "properties": {
-
-        "password": {
+        "currentPassword": {
+            "type": "string"
+        },
+        "newPassword": {
             "type": "string"
         }
     },
-    "required": ["password"]
+    "required": ["currentPassword", "newPassword"]
 }
 
 

@@ -19,10 +19,11 @@ class Productsizeinsert(Resource):
                          '_ser=>%(ser)s, '
                          '_code=>%(product_size_code)s, '
                          '_value=>%(product_size)s, )', args, 'Admin enter product size in DB')
-            return{'message': 'Size and code Insert success'}, 200
+            return {'message': 'Size and code Insert success'}, 200
         except Exception as e:
             print(e)
             return {'message': 'Size and code Insert Error'}, 500
+
 
 class Productscolourinsert(Resource):
     @jwt_required
@@ -36,10 +37,11 @@ class Productscolourinsert(Resource):
                          '_ser=>%(ser)s, '
                          '_code=>%(product_color_code)s, '
                          '_value=>%(product_color)s, )', args, 'Admin enter product color DB')
-            return{'message': 'Color and code Insert success'}, 200
+            return {'message': 'Color and code Insert success'}, 200
         except Exception as e:
             print(e)
             return {'message': 'Color and code Insert Error'}, 500
+
 
 class Productinfoinsert(Resource):
     @jwt_required
@@ -68,6 +70,7 @@ class Productinfoinsert(Resource):
             print(e)
             return {'message': 'Product details Insert Error'}, 500
 
+
 class Productsubcategoryinsert(Resource):
     @jwt_required
     def post(self):
@@ -77,15 +80,16 @@ class Productsubcategoryinsert(Resource):
                     'product_desc': data['product_desc']}
 
             run_db_query('call spProdTypeInsertUpdateDelete ('
-                     '_ser=>%(ser)s, '
-                     '_categoryid=>%(product_category_id)s, '
-                     '_name=>%(product_name)s, '
-                     '_desc=>%(product_desc)s,)',
-                     args, 'Admin enter product type in DB')
+                         '_ser=>%(ser)s, '
+                         '_categoryid=>%(product_category_id)s, '
+                         '_name=>%(product_name)s, '
+                         '_desc=>%(product_desc)s,)',
+                         args, 'Admin enter product type in DB')
             return {'message': 'Product type Insert success'}, 200
         except Exception as e:
-           print(e)
+            print(e)
         return {'message': 'Product type insert error'}, 500
+
 
 class Productsubcategoryupdate(Resource):
     @jwt_required
@@ -97,14 +101,14 @@ class Productsubcategoryupdate(Resource):
                     'product_subcategory_id': data['product_subcategory_id']}
 
             run_db_query('call spProdTypeInsertUpdateDelete ('
-                     '_ser=>%(ser)s, '
-                     '_subcateg_id=>%(product_subcategory_id)s, '
-                     '_name=>%(product_name)s, '
-                     '_desc=>%(product_desc)s,)',
-                     args, 'Admin update product type in DB')
+                         '_ser=>%(ser)s, '
+                         '_subcateg_id=>%(product_subcategory_id)s, '
+                         '_name=>%(product_name)s, '
+                         '_desc=>%(product_desc)s,)',
+                         args, 'Admin update product type in DB')
             return {'message': 'Product type update success'}, 200
         except Exception as e:
-           print(e)
+            print(e)
         return {'message': 'Product type update error'}, 500
 
 
@@ -127,7 +131,7 @@ class Productinfouppdate(Resource):
                          '_colour=>%(product_color_code)s, '
                          '_size=>%(product_size_code)s,)'
                          '_qty=>%(product_Qty)s,)',
-                     args, 'Admin Updated product details in DB')
+                         args, 'Admin Updated product details in DB')
 
             return {'message': 'Product details Update success'}, 200
         except Exception as e:
