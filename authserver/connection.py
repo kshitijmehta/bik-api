@@ -15,13 +15,17 @@ def run_db_query(query, args, action_performed, perform_fetch):
         cur.execute(query, args)
         result = None
         if perform_fetch:
+
            result = cur.fetchone()
+
+
         conn.commit()
         return result
 
     except Exception as e:
         print('action_performed:', action_performed)
         print(e)
+        return 'error'
 
     finally:
         cur.close()

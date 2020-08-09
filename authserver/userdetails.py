@@ -1,74 +1,88 @@
-import datetime
+from datetime import datetime
 from flask_restful import Resource
 from authserver import bcrypt
 from flask import request
 from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, jwt_refresh_token_required, \
     get_jwt_identity, get_raw_jwt
+
+from authserver.transformers.login_transformer import login_transformer
 from authserver.validation_schemas import userinfo
 from authserver.connection import run_db_query
 
-class Userinfo(Resource):
+
+class UserInfo(Resource):
     @jwt_required
     def get(self):
         try:
             identity = get_jwt_identity()
-            args = {'user_id': identity['id']}
-            result = run_db_query('select * from PersonalInfoSelect'
-                                  '(%(user_id)s)', args, 'user info select from DB')
+            args = {'user_id': identity['id'], 'email': identity['email']}
+            result = run_db_query('select userid, fname, lname, mobno, dob, gender, addrid, addrline1, addrline2,'
+                                  '  addrline3, city, state, pincode ,country from PersonalInfoSelect'
+                                  '(%(user_id)s)', args, 'user info select from DB', True)
             if not result:
-              return {"message": "user not found"}, 500
+                return {"message": "user not found"}, 500
             else:
-                return {"message": "User select success"}, 200
+                data = login_transformer(result, args['email'])
+                return {"message": "User select success", "data": data}, 200
         except Exception as e:
             print(e)
             return {'message': 'user select error'}, 500
 
     @jwt_required
     def post(self):
-         data = request.get_json()
-         user_validation = userinfo.validate_user(data)
-         if user_validation['isValid']:
+        data = request.get_json()
+        user_validation = userinfo.validate_user(data)
+        if user_validation['isValid']:
             identity = get_jwt_identity()
-
-
+            print(data)
             try:
-                    args = {'ser': 2, 'user_id': identity['id'],
-                            'f_name': data['f_name'], 'l_name': data['l_name'],
-                            'gender': data['gender'], 'dob': data['dob'],
-                            'typecode': 'c', 'line1': data['line1'],
-                            'line2': data['line2'], 'line3': data['line3'],
-                            'city': data['city'], 'state': data['state'],
-                            'country': data['country']}
+                args = {'ser': 2, 'user_id': identity['id'],
+                        'email': identity['email'],
+                        'f_name': data['firstName'], 'l_name': data['lastName'],'mobile': data['mobile'],
+                        'gender': data['gender'], 'dob': data['dob'], 'typecode': 'c',
+                        'line1': data['addressLineOne'], 'line2': data['addressLineTwo'], 'line3': data['addressLineThree'],
+                        'city': data['city'], 'state': data['state'], 'pincode': data['pincode'],
+                        'country': data['country'], 'pwd': '', 'addressId': data['addressId'], 'addrserial': 1}
+                args['dob'] = datetime.strptime(args['dob'], '%Y-%m-%d').isoformat()
+                result = run_db_query('call spUserInsertUpdate ('
+                                      '_ser=>%(ser)s, '
+                                      '_email=>%(email)s, '
+                                      '_mobileno=>%(mobile)s, '
+                                      '_pwd=>%(pwd)s, '
+                                      '_typecode=>%(typecode)s, '
+                                      '_fname=>%(f_name)s, '
+                                      '_lname=>%(l_name)s, '
+                                      '_gender=>%(gender)s,'
+                                      '_dob=>%(dob)s) ',
+                                      args, 'user enter details in DB', False)
+                if result == 'error':
+                    raise Exception
 
-                    run_db_query('call spUserInsertUpdate ('
-                                 '_ser=>%(ser)s, '
-                                 '_fname=>%(f_name)s, '
-                                 '_lname=>%(l_name)s, '
-                                 '_gender=>%(gender)s,'
-                                 '_dob=>%(dob)s )',
-                                 args, 'user enter details in DB')
-
-                    address = data['address_id']
-                    if not address:
-                          args['ser'] = 1
-                    else:
-                          args['ser'] = 2
-                    run_db_query('call spaddressinsertupdatedelete ('
-                                 '_ser=>%(ser)s, '
-                                 '_typecode=>%(typecode)s, '
-                                 '_line1=>%(line1)s, '
-                                 '_line2=>%(line2)s, '
-                                 '_line3=>%(line3)s,'
-                                 '_city=>%(city)s'
-                                 '_state=>%(state)s'
-                                 '_country=>%(country)s)',
-                                 args, 'user enter/update address in DB')
-                    return {'message': 'user personal detail add success'}, 200
+                address = data['addressId'] != ''
+                if not address:
+                    args['ser'] = 1
+                else:
+                    args['ser'] = 2
+                args['typecode'] = 'h'
+                result = run_db_query('call spaddressinsertupdatedelete ('
+                                      '_ser=>%(ser)s, '
+                                      '_userid=>%(user_id)s, '
+                                      '_addrserial=>%(addrserial)s, '
+                                      '_typecode=>%(typecode)s, '
+                                      '_line1=>%(line1)s, '
+                                      '_line2=>%(line2)s, '
+                                      '_line3=>%(line3)s,'
+                                      '_city=>%(city)s, '
+                                      '_state=>%(state)s, '
+                                      '_pincode=>%(pincode)s, '
+                                      '_country=>%(country)s)',
+                                      args, 'user enter/update address in DB', False)
+                if result == 'error':
+                    raise Exception
+                return {'message': 'user personal detail add success'}, 200
             except Exception as e:
-                        print(e)
-                        return {'message': 'user personal detail error'}, 500
+                print(e)
+                return {'message': 'user personal detail error'}, 500
 
-
-         else:
-            return {'message': 'register field validation error'}, 500
-
+        else:
+            return {'message': 'Userinfo field validation error'}, 500

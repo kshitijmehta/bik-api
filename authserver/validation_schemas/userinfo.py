@@ -4,27 +4,29 @@ from jsonschema.exceptions import ValidationError
 user_schema = {
     "type": "object",
     "properties": {
-        "f_name": {
+        "firstName": {
             "type": "string"
         },
-        "l_name": {
+        "lastName": {
             "type": "string",
-
+        },
+        "dob ": {
+            "type": "string",
+        },
+        "mobile": {
+            "type": "string",
+            "pattern": "^((\+)(\d{1,4}[-]))(\d{10}){1}?$"
         },
         "gender": {
             "type": "string",
-
         },
-         "dob ": {
+        "addressLineOne": {
             "type": "string",
         },
-         "line1": {
+        "addressLineTwo": {
             "type": "string",
         },
-        "line2": {
-            "type": "string",
-        },
-        "line3": {
+        "addressLineThree": {
             "type": "string",
         },
         "city": {
@@ -37,7 +39,7 @@ user_schema = {
             "type": "string"
         }
     },
-    "required": ["f_name", "l_name", "gender", "DOB", "typecode" , "line1", "line2", "line3", "city", "state", "country"]
+    "required": ["firstName", "lastName", "mobile", "addressLineOne", "city", "state", "country"]
 }
 
 
@@ -45,5 +47,6 @@ def validate_user(data):
     try:
         validate(data, user_schema)
     except ValidationError as e:
+        print(e)
         return {"isValid": False}
     return {"isValid": True}

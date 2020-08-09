@@ -8,15 +8,15 @@ user_schema = {
             "type": "string",
             "format": "email"
         },
-        "phone_number": {
+        "mobile": {
             "type": "string",
-            "length": 10
+            "pattern": "^((\+)(\d{1,4}[-]))(\d{10}){1}?$"
         },
         "password": {
             "type": "string"
         }
     },
-    "required": ["email", "phone_number", "password"]
+    "required": ["email", "mobile", "password"]
 }
 
 
