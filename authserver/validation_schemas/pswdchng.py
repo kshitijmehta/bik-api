@@ -4,19 +4,14 @@ from jsonschema.exceptions import ValidationError
 user_schema = {
     "type": "object",
     "properties": {
-        "email": {
-            "type": "string",
-            "format": "email"
+        "currentPassword": {
+            "type": "string"
         },
-        "mobile": {
-            "type": "string",
-            "pattern": "^((\+)(\d{1,4}[-]))(\d{10}){1}?$"
-        },
-        "password": {
+        "newPassword": {
             "type": "string"
         }
     },
-    "required": ["email", "mobile", "password"]
+    "required": ["currentPassword", "newPassword"]
 }
 
 
