@@ -34,3 +34,5 @@ class changepass(Resource):
             except Exception as e:
                 print(e)
                 return {'message': 'cant change password'}
+        else:
+            return {'message': 'Password  field validation error'}, 500
