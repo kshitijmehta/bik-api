@@ -4,7 +4,7 @@ from flask_jwt_extended import JWTManager
 from flask_bcrypt import Bcrypt
 import secrets
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='images')
 app.config['JWT_SECRET_KEY'] = secrets.secrets['JWT_SECRET_KEY']
 
 

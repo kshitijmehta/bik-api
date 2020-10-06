@@ -9,16 +9,12 @@ Product_size_schema = {
         },
         "product_size_code": {
             "type": "string",
-
         },
         "product_category": {
             "type": "integer",
-
         },
-
     },
-    "required": ["product_size", "product_size_code", "product_category"
-                 ]
+    "required": ["product_size", "product_size_code", "product_category"]
 }
 Product_color_schema = {
     "type": "object",
@@ -37,53 +33,52 @@ Product_schema = {
     "type": "object",
     "properties": {
         "product_INR_price": {
-            "type": "integer",
-        },
-        "product_size_code": {
-            "type": "integer",
-        },
-        "product_color_code": {
-            "type": "integer",
+            "type": "string",
         },
         "product_USD_price": {
-            "type": "integer",
+            "type": "string",
+        },
+        "product_size_code": {
+            "type": "string",
+        },
+        "product_color_code": {
+            "type": "string",
         },
         "product_Qty": {
-            "type": "integer",
+            "type": "string",
         },
-        "product_image_id": {
+        "product_name": {
             "type": "string"
         },
-        "product_image_path": {
+        "product_desc": {
             "type": "string"
         },
-        "product_image_name": {
+        "product_subcategory_id": {
             "type": "string"
-        },
+        }
 
     },
-    "required": ["product_desc", "product_INR_price",
-                 "product_USD_price", "product_Qty", "product_image_id", "product_image_path",
-                 "product_image_name", "product_size_code", "product_color_code"]
+    "required": ["product_INR_price", "product_USD_price", "product_Qty",
+                 "product_desc", "product_size_code", "product_color_code", "product_name", "product_subcategory_id"]
 }
 Product_subcategory_schema = {
     "type": "object",
     "properties": {
         "product_category_id": {
-            "type": "string"
+            "type": "integer",
         },
         "product_name": {
             "type": "string",
-
         },
         "product_desc": {
             "type": "string",
-
         },
+        "subcategory_id": {
+            "type": "string",
+        }
 
     },
-    "required": ["product_category_id", "product_name", "product_desc"
-                 ]
+    "required": ["product_category_id", "product_name", "product_desc","subcategory_id"]
 }
 
 

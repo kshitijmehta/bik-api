@@ -1,4 +1,4 @@
-from authserver import app, userlogin, userdetails, chgpassword, products, api
+from authserver import app, userlogin, userdetails, chgpassword, products, api, coupons
 
 
 """Resources"""
@@ -8,8 +8,9 @@ api.add_resource(userdetails.UserInfo, '/v1/userinfo')
 api.add_resource(chgpassword.changepass, '/v1/passwordchange')
 api.add_resource(products.Productsizeinsert, '/v1/productsize')
 api.add_resource(products.Productinformation, '/v1/productinfo')
-api.add_resource(products.Productsubcategoryinformation, '/v1/productypeinsert')
+api.add_resource(products.Productsubcategoryinformation, '/v1/productsubcategory')
 api.add_resource(products.Productcolourinsert, '/v1/productcolour')
+api.add_resource(coupons.Coupondetails, '/v1/productcoupon')
 api.add_resource(userlogin.ProtectedRoute, '/v1/protected')
 
 
