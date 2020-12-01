@@ -1,5 +1,4 @@
-from authserver import app, userlogin, userdetails, chgpassword, products, api, coupons
-
+from authserver import app, userlogin, userdetails, chgpassword, products, cart, api, coupons, order, shipment
 
 """Resources"""
 api.add_resource(userlogin.UserRegistration, '/v1/registration')
@@ -10,7 +9,30 @@ api.add_resource(products.Productsizeinsert, '/v1/productsize')
 api.add_resource(products.Productinformation, '/v1/productinfo')
 api.add_resource(products.Productsubcategoryinformation, '/v1/productsubcategory')
 api.add_resource(products.Productcolourinsert, '/v1/productcolour')
+api.add_resource(products.Productcount, '/v1/productcount')
 api.add_resource(coupons.Coupondetails, '/v1/productcoupon')
+api.add_resource(products.ProductListCustomer, '/v1/productlistcustomer')
+api.add_resource(cart.CustomerCart, '/v1/cart')
 api.add_resource(userlogin.ProtectedRoute, '/v1/protected')
-
+api.add_resource(order.PlaceOrder, '/v1/checkout')
+api.add_resource(order.PaymentSuccessRazorpay, '/v1/payment/razorpay')
+api.add_resource(order.PlaceOrderPaypal, '/v1/paypalorder')
+api.add_resource(order.PaymentSuccessPaypal, '/v1/payment/paypal')
+api.add_resource(order.PlaceOrderCOD, '/v1/payment/codorder')
+api.add_resource(order.ResendCODOTP, '/v1/payment/codresendotp')
+api.add_resource(order.CheckCODStatus, '/v1/payment/codplaceorder')
+api.add_resource(order.GetCustomerOrders, '/v1/getcustomerorders')
+api.add_resource(order.GetAdminOrders, '/v1/getadminorders')
+api.add_resource(shipment.ShipperDetails, '/v1/shipper')
+api.add_resource(shipment.ShipmentDetails, '/v1/shipment')
+api.add_resource(userdetails.AllUserInfo, '/v1/alluserinformation')
+api.add_resource(userdetails.UpdateUserDiscount, '/v1/userdiscount')
+api.add_resource(products.ProductHighlight, '/v1/producthighlight')
+api.add_resource(coupons.CouponValidate, '/v1/validatecoupon')
+api.add_resource(order.CustomerReturn, '/v1/customerproductreturn')
+api.add_resource(products.ProductRelated, '/v1/relatedproducts')
+api.add_resource(products.TrendingLatest, '/v1/trendinglatest')
+api.add_resource(userlogin.ForgotPassword,'/v1/forgetpassword')
+api.add_resource(cart.UpdateCartQuantity, '/v1/updatecartquantity')
+api.add_resource(products.saveimage, '/v1/saveimage')
 

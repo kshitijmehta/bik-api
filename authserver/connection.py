@@ -29,6 +29,7 @@ def run_db_query(query, args, action_performed, perform_fetch, fetch_multi=False
     except Exception as e:
         print('action_performed:', action_performed)
         print(e)
+        print(cur.query)
         return 'error'
 
     finally:

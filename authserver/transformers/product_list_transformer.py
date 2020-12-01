@@ -6,10 +6,8 @@ def product_list_transformer(data):
             'productCategoryName': size_obj['prodcategory'],
             'name': size_obj['prodname'],
             'description': size_obj['proddesc'],
-            'priceINR': str(size_obj['inrprice']),
-            'priceUSD': str(size_obj['usdprice']),
-            'colour': size_obj['colour'],
-            'size': size_obj['size'],
+            'latest': size_obj['latest'],
+            'trending': size_obj['trending'],
             'quantity': size_obj['qty']
         })
     return res
@@ -32,6 +30,7 @@ def single_product_transformer(data):
             'sizeId': size_obj['sizeid'],
             'colourId': size_obj['colourid'],
             'imageNames': size_obj['imagename'],
-            'imagePaths': size_obj['imagepath']
+            'imagePaths': size_obj['imagepath'],
+            'productDetailId': size_obj['proddetailid']
         })
     return res

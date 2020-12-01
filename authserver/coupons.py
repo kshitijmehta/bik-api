@@ -1,17 +1,17 @@
 import datetime
 from flask_restful import Resource
-from authserver import bcrypt
+from authserver import bcrypt, admin_required
 from flask import request
 from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, jwt_refresh_token_required, \
     get_jwt_identity, get_raw_jwt
 
-from authserver.transformers.product_coupon_transformer import product_coupon_transformer
+from authserver.transformers.product_coupon_transformer import product_coupon_transformer, coupon_format
 from authserver.validation_schemas import coupon
 from authserver.connection import run_db_query
 
 
 class Coupondetails(Resource):
-    # @jwt_required
+    @admin_required
     def get(self):
         try:
             args = ''
@@ -22,6 +22,7 @@ class Coupondetails(Resource):
             print(e)
             return {'message': 'color select error'}, 500
 
+    @admin_required
     def post(self):
         data = request.get_json()
         print(data)
@@ -53,3 +54,24 @@ class Coupondetails(Resource):
                 return {'message': 'Coupon size insert,update,delete Error'}, 500
         else:
             return {'message': 'Coupon field validation error'}, 500
+
+
+class CouponValidate(Resource):
+    def get(self):
+        try:
+            coupon_code = request.args.getlist('couponCode')[0]
+            if coupon_code:
+                args = {'coupon_code': coupon_code}
+                result = run_db_query(
+                    'select cp_code , cp_id , cp_value '
+                    'from fncheckcoupon('
+                    '_couponcode=>%(coupon_code)s)'
+                    , args, ' coupon returned from DB', True)
+                if result == 'error':
+                    raise Exception
+                return {"message": "coupon code return success ", 'data': coupon_format(result)}, 200
+            else:
+                return {'message': 'Coupon Invalid'}, 200
+        except Exception as e:
+            print(e)
+            return {'message': 'coupon code did not matched error'}, 500

@@ -36,7 +36,7 @@ def create_image_query(images):
         index = 0
         for key, value in images.items():
             index = index + 1
-            image_query += '_name'+str(index)+'=>%('+key+')s, _img'+str(index)+'path=>%('+value+')s,'
+            image_query += '_name' + str(index) + '=>%(' + key + ')s, _img' + str(index) + 'path=>%(' + value + ')s,'
 
         return image_query[:-1] + ')'
 
@@ -55,3 +55,23 @@ def update_arg_for_image(data):
     except Exception as e:
         print(e)
         return 'error'
+
+
+def create_tuple_for_product_details(combo_data, product_id, inr_price, usd_price):
+    try:
+        print(combo_data)
+        product_details = ''
+        product_id_inr_usd_string = str(product_id) + ', ' + str(inr_price) + ',' + str(usd_price) + ', '
+        for combo in combo_data:
+            if 'productDetailId' in combo and combo['productDetailId'] == '0':
+                product_details = product_details + '(' + product_id_inr_usd_string
+                for key, value in combo.items():
+                    if key != 'productDetailId':
+                        product_details = product_details + str(value) + ','
+                product_details = product_details[:-1]
+                product_details = product_details + '),'
+        product_details = product_details[:-1]
+        return product_details
+    except Exception as e:
+        print(e)
+        return e
