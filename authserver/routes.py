@@ -34,5 +34,4 @@ api.add_resource(products.ProductRelated, '/v1/relatedproducts')
 api.add_resource(products.TrendingLatest, '/v1/trendinglatest')
 api.add_resource(userlogin.ForgotPassword,'/v1/forgetpassword')
 api.add_resource(cart.UpdateCartQuantity, '/v1/updatecartquantity')
-api.add_resource(products.saveimage, '/v1/saveimage')
-
+api.add_resource(products.ProductCategory,'/v1/productcategory')

@@ -9,6 +9,7 @@ from flask import request
 from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, jwt_refresh_token_required, \
     get_jwt_identity, get_raw_jwt
 
+from authserver.transformers.product_category_transformer import product_category_transformer
 from authserver.transformers.product_count_transformer import product_count_transformer
 from authserver.transformers.product_list_customer_transformer import product_list_customer_transformer
 from authserver.transformers.product_list_transformer import product_list_transformer, single_product_transformer
@@ -329,42 +330,23 @@ class Productinformation(Resource):
         else:
             return {'message': 'Product field validation error'}, 500
 
-##########
 
-class saveimage(Resource):
-    def post(self):
-        parse = reqparse.RequestParser()
-        parse.add_argument('product_image_0', type=werkzeug.datastructures.FileStorage, location='files')
-        parse.add_argument('product_image_1', type=werkzeug.datastructures.FileStorage, location='files')
-        parse.add_argument('product_image_2', type=werkzeug.datastructures.FileStorage, location='files')
-        parse.add_argument('product_image_3', type=werkzeug.datastructures.FileStorage, location='files')
-        parse.add_argument('product_image_4', type=werkzeug.datastructures.FileStorage, location='files')
-        parse.add_argument('prod_id')
-
-        data = parse.parse_args()
-        data['ser_image'] = 1
-        image_save_status = save_image(data, 'product_image_0', 'product_image_1',
-                                       'product_image_2', 'product_image_3', 'product_image_4')
-        if image_save_status == 'error':
-            raise Exception
-
-        if image_save_status:
-            # getting key:value dict using the
-            # uuid created and image name
-            image_query = create_image_query(image_save_status)
-            data.update(update_arg_for_image(image_save_status))
-
-            if image_query == 'error':
+class ProductCategory(Resource):
+    def get(self):
+        try:
+            args = ''
+            result = run_db_query('select ps_id ,cat_name'
+                                  ' from fnProdCategSelect()',
+                                  args, 'Prod sub category select select from DB', True, True)
+            if result == 'error':
                 raise Exception
+            identity = get_jwt_identity()
+            return {"message": "product category details select success",
+                    'data': product_category_transformer(result, identity['usertype'] == 'a' if identity else False)}, 200
+        except Exception as e:
+            print(e)
+            return {'message': 'product category details select error'}, 500
 
-            product_image_result = run_db_query('call spImageInsertUpdateDelete ('
-                                                '_ser=>%(ser_image)s, '
-                                                '_prodid=>%(prod_id)s,' +
-                                                image_query, data, 'Admin enter images in DB', False)
-            if product_image_result == 'error':
-                raise Exception
-
-##########
 
 class Productsubcategoryinformation(Resource):
     def get(self):
