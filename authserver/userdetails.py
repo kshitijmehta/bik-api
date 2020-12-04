@@ -23,7 +23,7 @@ class UserInfo(Resource):
             if not result:
                 return {"message": "user not found"}, 500
             else:
-                data = login_transformer(result, args['email'])
+                data = login_transformer(result, args['email'], identity['usertype'] == 'a')
                 return {"message": "User select success", "data": data}, 200
         except Exception as e:
             print(e)
