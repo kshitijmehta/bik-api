@@ -8,6 +8,7 @@ import secrets
 
 app = Flask(__name__, static_folder='images')
 app.config['JWT_SECRET_KEY'] = secrets.secrets['JWT_SECRET_KEY']
+app.config['PROPAGATE_EXCEPTIONS'] = True
 
 api = Api(app)
 jwt = JWTManager(app)
