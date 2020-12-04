@@ -1,13 +1,14 @@
 
-def login_transformer(data, email):
+def login_transformer(data, email, is_admin):
     return {
-        'id': data['userid'],
+        'userId': data['userid'],
         'emailAddress': email,
         'mobile': data['mobno'],
         'firstName': data['fname'],
         'lastName': data['lname'],
         'dob': str(data['dob']),
         'gender': data['gender'],
+        'discount': data['discount'],
         'addressId': data['addrid'],
         'addressLineOne': data['addrline1'],
         'addressLineTwo': data['addrline2'],
@@ -16,4 +17,5 @@ def login_transformer(data, email):
         'state': data['state'],
         'pincode': data['pincode'],
         'country': data['country'],
+        'isAdmin': is_admin
     }

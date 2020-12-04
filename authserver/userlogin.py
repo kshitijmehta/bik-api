@@ -1,4 +1,6 @@
 import datetime
+import random
+
 from flask_restful import Resource
 from authserver import bcrypt
 from flask import request
@@ -56,7 +58,7 @@ class UserLogin(Resource):
         if user_login_validation['isValid']:
             try:
                 args = {'email': data['email']}
-                result = run_db_query('select userid, userpassword from getuseridpassword ('
+                result = run_db_query('select userid, userpassword, usertype from getuseridpassword ('
                                       '_email=>%(email)s)',
                                       args, 'get userid and password from DB', True)
                 if result == 'error':
@@ -66,7 +68,8 @@ class UserLogin(Resource):
                     return {"message": "User already exists"}, 500
                 password = data['password'].encode('utf-8')
                 if bcrypt.check_password_hash(result['userpassword'], password):
-                    access_token = create_access_token(identity={'email': args['email'], 'id': result['userid']},
+                    access_token = create_access_token(identity={'email': args['email'], 'id': result['userid'],
+                                                                 'usertype': result['usertype']},
                                                        expires_delta=datetime.timedelta(hours=1))
                     return {"message": 'Login successful', "access_token": access_token}, 200
                 else:
@@ -78,6 +81,40 @@ class UserLogin(Resource):
 
         else:
             return {'message': 'login field validation error'}, 500
+
+
+class ForgotPassword(Resource):
+    def post(self):
+        data = request.get_json()
+        reset_pass = login.validate_reset_password(data)
+        if reset_pass['isValid']:
+            try:
+                args = {'email': data['email']}
+                result = run_db_query('select user_id from fncheckifuseremailexists'
+                                      '(%(email)s)', args, 'user password select from DB', True)
+                if result == 'error':
+                    raise Exception
+
+                if not result:
+                    return {"message": "Email is invalid"}, 404
+                password_length = 8
+                possible_characters = "@!*&abcdefghijklmnopqrstuvwxyz1234567890"
+
+                random_character_list = [random.choice(possible_characters) for i in range(password_length)]
+                random_password = "".join(random_character_list)
+                print(random_password)
+                new_password = bcrypt.generate_password_hash(random_password).decode('utf-8')
+                args['new_password'] = new_password
+                result = run_db_query('call spresetpassword ('
+                                      '_email=>%(email)s, '
+                                      '_pwd=>%(new_password)s)',
+                                      args, 'forget password reset', False)
+                if result == 'error':
+                    raise Exception
+                return {'message': 'Password reset steps sent to your email.'}, 200
+            except Exception as e:
+                print(e)
+                return {'message': 'Please try again.'}, 500
 
 
 class ProtectedRoute(Resource):

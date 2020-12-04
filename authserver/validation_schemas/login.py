@@ -14,6 +14,25 @@ user_login = {
     "required": ["email", "password"]
 }
 
+reset_pass = {
+    "type": "object",
+    "properties": {
+        "email": {
+            "type": "string"
+        }
+    },
+    "required": ["email"]
+}
+
+
+def validate_reset_password(data):
+    try:
+        validate(data, reset_pass)
+    except ValidationError as e:
+        print(e)
+        return {"isValid": False}
+    return {"isValid": True}
+
 
 def validate_user_login(data):
     try:

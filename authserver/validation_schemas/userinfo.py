@@ -42,10 +42,32 @@ user_schema = {
     "required": ["firstName", "lastName", "mobile", "addressLineOne", "city", "state", "country"]
 }
 
+discount_schema = {
+    "type": "object",
+    "properties": {
+        "discount": {
+            "type": "string"
+        },
+        "email": {
+            "type": "string"
+        },
+    },
+    "required": ["discount","email"]
+}
+
 
 def validate_user(data):
     try:
         validate(data, user_schema)
+    except ValidationError as e:
+        print(e)
+        return {"isValid": False}
+    return {"isValid": True}
+
+
+def validate_user_discount(data):
+    try:
+        validate(data, discount_schema)
     except ValidationError as e:
         print(e)
         return {"isValid": False}
