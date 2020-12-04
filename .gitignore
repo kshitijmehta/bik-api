@@ -2,8 +2,4 @@ __pycache__/
 .idea/
 venv/
 secrets.py
-<<<<<<< HEAD
 images/
-=======
-images/
->>>>>>> 1496dee3b5f46589a75fb4ac031c8422842eb9d8
