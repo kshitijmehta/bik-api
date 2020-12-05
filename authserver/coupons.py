@@ -25,7 +25,6 @@ class Coupondetails(Resource):
     @admin_required
     def post(self):
         data = request.get_json()
-        print(data)
         coupon_validation = coupon.validate_coupon(data)
         if coupon_validation['isValid']:
             try:
@@ -38,7 +37,6 @@ class Coupondetails(Resource):
                     args['ser'] = 2
                 elif args['coupon_id'] != 0 and args['delete_flag'] is True:
                     args['ser'] = 3
-                print(args)
                 result = run_db_query('call spCouponInsertUpdateDelete ('
                                       '_ser=>%(ser)s, '
                                       '_cp_code=>%(coupon_code)s, '

@@ -35,7 +35,6 @@ class UserInfo(Resource):
         user_validation = userinfo.validate_user(data)
         if user_validation['isValid']:
             identity = get_jwt_identity()
-            print(data)
             try:
                 args = {'ser': 2, 'user_id': identity['id'],
                         'email': identity['email'],
@@ -81,7 +80,6 @@ class UserInfo(Resource):
                                       '_pincode=>%(pincode)s, '
                                       '_country=>%(country)s)',
                                       args, 'user enter/update address in DB', True)
-                print(str(result[0]))
                 if result == 'error':
                     raise Exception
                 return {'message': 'user personal detail add success', 'data': str(result[0])}, 200

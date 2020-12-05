@@ -29,7 +29,6 @@ class ShipperDetails(Resource):
     @admin_required
     def post(self):
         data = request.get_json()
-        print(data)
         shipper_validation = shipper.validate_shipper(data)
         if shipper_validation['isValid']:
             try:
@@ -48,7 +47,7 @@ class ShipperDetails(Resource):
                                       '_shipperlink=>%(shipper_link)s,'
                                       ' _shipperid=>%(shipper_id)s )',
                                       args, 'Admin enter update or delete shipper details in DB', False)
-                print(result)
+
                 if result == 'error':
                     raise Exception
                 return {'message': 'shipper details saved'}, 200
@@ -63,7 +62,6 @@ class ShipmentDetails(Resource):
     @jwt_required
     def post(self):
         data = request.get_json()
-        print(data)
         shipment_validation = shipment.validate_shipment(data)
         if shipment_validation['isValid']:
             try:

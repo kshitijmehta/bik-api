@@ -119,7 +119,7 @@ class PaymentSuccessRazorpay(Resource):
                                               '_coupon_id=>%(coupon_id)s )',
                                               args,
                                               'save payment success for razorpay', True)
-                        print(result)
+
                         if result[0] == 200:
                             return {'message': 'success'}, 200
                         else:
@@ -151,7 +151,7 @@ class PlaceOrderPaypal(Resource):
                             'user_display_amount': data['displayAmount'], 'order_id': data['orderId'],
                             'coupon_id': data['couponId'] if 'couponId' in data else None}
                     # Price check
-                    print(args)
+
                     result = run_db_query('select _finaltotalvalue, status from '
                                           ' store.fncheckprice('
                                           '_user_id=>%(user_id)s, '
@@ -201,7 +201,6 @@ class PlaceOrderPaypal(Resource):
                             else:
                                 return {'message': 'Error while completing payment, please retry.'}, 500
                         except IOError as ioe:
-                            print(ioe)
                             if isinstance(ioe, HttpError):
                                 # Something went wrong server-side
                                 print(ioe.status_code)
@@ -229,8 +228,6 @@ class PaymentSuccessPaypal(Resource):
             validation = order.validate_paypal_payment(data)
             if validation['isValid']:
                 if identity['id']:
-                    today = date.today()
-                    print(data)
                     args = {'paypal_response': json.dumps(data['paypalResponse']), 'order_id': data['orderId'],
                             'address_id': data['addressId'],'user_id': identity['id'], 'quantity': data['quantity'],
                             'order_number': str(identity['id']) + '-' + str(int(round(time.time() * 1000))),
@@ -247,7 +244,7 @@ class PaymentSuccessPaypal(Resource):
                                           '_coupon_id=>%(coupon_id)s )',
                                           args,
                                           'save payment success for paypal', True)
-                    print(result)
+
                     if result[0] == 200:
                         return {
                                    'message': 'Payment successful ! You can check you order details from order section.'}, 200
@@ -315,7 +312,7 @@ class PlaceOrderCOD(Resource):
                         # Sending OTP
                         conn = http.client.HTTPSConnection('api.msg91.com')
                         headers = {'content-type': 'application/json'}
-                        print(mobile_number)
+
                         conn.request('GET', '/api/v5/otp?'
                                             'authkey=346784A9nXIgTbv5faa2c51P1'
                                             '&template_id=5fab7dd9c7f9882608603eca'
@@ -383,7 +380,6 @@ class ResendCODOTP(Resource):
                 data = ast.literal_eval(data)
 
                 if data['type'] == 'error':
-                    print(data)
                     # If max retry reached sending a new OTP
                     if data['message'] == 'OTP retry count maxed out':
                         conn.request('GET', '/api/v5/otp?'
@@ -432,7 +428,6 @@ class CheckCODStatus(Resource):
                     if not result:
                         return {"message": "user not found, login again"}, 500
                     mobile_number = result['mobno']
-                    print(mobile_number)
                     # Validating OTP
                     conn = http.client.HTTPSConnection("api.msg91.com")
 

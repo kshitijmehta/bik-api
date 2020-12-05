@@ -109,7 +109,7 @@ class ForgotPassword(Resource):
                 user_name = result['user_firstname']
                 random_character_list = [random.choice(possible_characters) for i in range(password_length)]
                 random_password = "".join(random_character_list)
-                print(random_password)
+
                 new_password = bcrypt.generate_password_hash(random_password).decode('utf-8')
                 args['new_password'] = new_password
                 result = run_db_query('call spresetpassword ('

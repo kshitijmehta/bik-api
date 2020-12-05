@@ -18,6 +18,9 @@ def send_email(template_id, payload_data):
         headers = {'content-type': 'application/json'}
         conn.request('POST', '/api/v5/email', json.dumps(payload), headers)
         print(payload)
+        res = conn.getresponse()
+        data = res.read()
+        print(data.decode("utf-8"))
         conn.close()
 
     except Exception as e:

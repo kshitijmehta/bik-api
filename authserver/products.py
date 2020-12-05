@@ -118,7 +118,7 @@ class Productinformation(Resource):
                     'select prodid , prodcategory , prodname, proddesc, qty, trending, latest from '
                     'fnAdminProductSelect()',
                     args, 'Prod info select select from DB', True, True)
-                print(result)
+
                 return {"message": "product info details select success", 'data': product_list_transformer(result)}, 200
             else:
                 result = run_db_query(
@@ -214,7 +214,7 @@ class Productinformation(Resource):
                     args['product_INR_price'],
                     args['product_USD_price']
                 )
-                print(product_details_query)
+
                 if product_details_query != '':
                     args['product_details_query'] = product_details_query
                     product_details = run_db_query('call spproductdetails_add ('
@@ -404,7 +404,6 @@ class Productcount(Resource):
                                   'size_name, '
                                   'prod_count '
                                   'from vw_product_counts', args, 'product count view', True, True)
-            print(result)
             return {"message": "product count success", 'data': product_count_transformer(result)}, 200
         except Exception as e:
             print(e)
@@ -472,7 +471,7 @@ class ProductListCustomer(Resource):
                                   '_price=>%(price)s '
                                   ') LIMIT ' + args['limit'] + ' OFFSET ' + args['offset'],
                                   args, 'get productlist for customer', True, True)
-            print(result)
+
             return {"message": "get productlist for customer", 'data': product_list_customer_transformer(result)}, 200
         except Exception as e:
             print(e)

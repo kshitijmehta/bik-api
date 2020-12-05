@@ -4,7 +4,6 @@ from authserver.transformers.login_transformer import login_transformer
 def admin_orders(data):
     res = []
     for orders_obj in data:
-        print(orders_obj['userdetails'])
         order_items = []
         for items in orders_obj['orderitems']:
             order_items.append(({

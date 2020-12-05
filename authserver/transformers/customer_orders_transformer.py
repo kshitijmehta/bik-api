@@ -22,7 +22,7 @@ def customer_orders(data):
                     'paymentReturned': items['orderdetail_returnpayment'],
                 }
             }))
-        print(order_items)
+
         res.append({
             'orderId': orders_obj['order_id'],
             'totalPrice': str(orders_obj['order_totalprice']),

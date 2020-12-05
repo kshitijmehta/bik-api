@@ -1,7 +1,6 @@
 def product_quick_list_transformer(data):
     res = []
     for product_obj in data:
-        print(product_obj)
         res.append({
             'productId': str(product_obj['prodid']),
             'productCategoryName': product_obj['prod_categ_name'],
@@ -18,7 +17,7 @@ def product_quick_list_transformer(data):
 def product_trending_latest_list(data):
     res = []
     for product_obj in data:
-        print(product_obj)
+
         res.append({
             'productId': str(product_obj['prod_id']),
             'productCategoryName': product_obj['prod_categ_name'],

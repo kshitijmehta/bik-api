@@ -15,8 +15,7 @@ class CustomerCart(Resource):
             args = {'user_id': identity['id']}
             result = run_db_query('select js from store.fn_get_cart (_userid=>%(user_id)s)',
                                   args, 'get cart information', True)
-            print('/n')
-            print(result)
+
             if result[0]:
                 return {'message': 'Get customer cart success', 'data': get_cart_transformer(result[0])}, 200
             else:
@@ -27,10 +26,7 @@ class CustomerCart(Resource):
     @jwt_required
     def post(self):
         data = request.get_json()
-        print(data)
         identity = get_jwt_identity()
-        print('/n')
-        print(identity)
         # order_validation = order.validate_order(data)
         # if order_validation['isValid']:
         try:
@@ -41,12 +37,11 @@ class CustomerCart(Resource):
                     }
 
             if args['orderdetail_id'] != "0" and not args['delete_flag']:
-                print(args)
                 result = run_db_query('call store.order_item_update ('
                                       '_qty=>%(order_quantity)s, '
                                       '_odid=>%(orderdetail_id)s)',
                                       args, 'order details Update in DB', True)
-                print(result)
+
                 if not result[1]:
                     return {'message': 'order update success', 'data': {}}, 200
                 else:
@@ -55,18 +50,16 @@ class CustomerCart(Resource):
                 result = run_db_query('call store.order_item_delete ('
                                       '_odid=>%(orderdetail_id)s)',
                                       args, 'order details Deleted in DB', False)
-                print(result)
+
                 return {'message': 'order delete success', 'message': result}, 200
 
             else:
-                print(args)
                 result = run_db_query('select * from store.order_item_add('
                                       '_uid=>%(user_id)s, '
                                       '_pdid=>%(product_detail_id)s, '
                                       '_prid=>%(price_id)s, '
                                       '_qty=>%(order_quantity)s)'
                                       , args, 'order details updated in DB', True)
-                print(result[1])
                 return {'message': 'order insert,update,delete success',
                         'data': add_to_cart_transformer(result[1])}, 200
         except Exception as e:
@@ -85,7 +78,6 @@ class UpdateCartQuantity(Resource):
             result = run_db_query('select * from store.updatecartquantity ('
                                   '_order_detail_ids=>%(_order_detail_ids)s)',
                                   args, 'update cart quantities', True)
-            print(result[0])
             if result == 'error':
                 raise Exception
             if result['status']:

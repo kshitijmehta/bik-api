@@ -59,7 +59,6 @@ def update_arg_for_image(data):
 
 def create_tuple_for_product_details(combo_data, product_id, inr_price, usd_price):
     try:
-        print(combo_data)
         product_details = ''
         product_id_inr_usd_string = str(product_id) + ', ' + str(inr_price) + ',' + str(usd_price) + ', '
         for combo in combo_data:
