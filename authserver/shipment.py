@@ -6,8 +6,10 @@ from flask_jwt_extended import create_access_token, create_refresh_token, jwt_re
     get_jwt_identity, get_raw_jwt
 
 from authserver.transformers.shipment_transformer import shipment_transformer
+from authserver.utils.send_email import send_email
 from authserver.validation_schemas import shipper, shipment
 from authserver.connection import run_db_query
+from secrets import secrets
 
 
 class ShipperDetails(Resource):
@@ -108,6 +110,17 @@ class ShipmentDetails(Resource):
                                           args, 'return flags added or changed  in DB', False)
                     if result == 'error':
                         raise Exception
+
+                if data['sendTrackingEmail'] and data["trackingNumber"] \
+                        and data['customerEmail'] and data['orderNumber'] and data['customerName']:
+                    send_email(secrets['PRODUCT_SHIPPED_TEMPLATE'], {
+                        "to_email": data['customerEmail'],
+                        "variables": {
+                            "NAME": data['customerName'],
+                            "ORDERNUMBER": data['orderNumber'],
+                            "TRACKING URL": data["trackingNumber"]
+                        }
+                    })
                 return {'message': 'Shipment details saved.'}, 200
             except Exception as e:
                 print(e)

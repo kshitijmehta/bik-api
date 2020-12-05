@@ -16,6 +16,7 @@ from authserver import admin_required
 from authserver.connection import run_db_query
 from authserver.transformers.admin_orders_transformer import admin_orders
 from authserver.transformers.customer_orders_transformer import customer_orders
+from authserver.utils.send_email import send_email
 from authserver.validation_schemas import order
 from authserver.validation_schemas.product import customer_returns
 from secrets import secrets
@@ -536,13 +537,31 @@ class CustomerReturn(Resource):
                 return_validation = customer_returns(data)
                 if return_validation['isValid']:
                     args = {'ser': 1, 'order_detail_id': data['orderDetailsId'], 'return_reason': data['returnReason']}
-                    print(args['return_reason'])
+
                     result = run_db_query('call store.spReturnUpdate ('
                                           '_ser=>%(ser)s, '
                                           '_orderdetailid=>%(order_detail_id)s )',
                                           args, 'return flags added or changed  in DB', False)
                     if result == 'error':
                         raise Exception
+                    # send customer email
+                    send_email(secrets['CUSTOMER_ORDER_RETURN_CANCEL_EMAIL_TEMPLATE'], {
+                        "to_email": identity['email'],
+                        "variables": {
+                            "NAME": data['userName'],
+                            "ORDERNUMBER": "#" + str(data['orderNumber']),
+                            "PRODUCTNAME": data['productName']
+                        }
+                    })
+                    #send admin email
+                    send_email(secrets['ADMIN_ORDER_RETURN_CANCEL_EMAIL_TEMPLATE'], {
+                        "to_email": secrets['ADMIN_EMAIL'],
+                        "variables": {
+                            "ORDERNUMBER": "#" + str(data['orderNumber']),
+                            "PRODUCTNAME": data['productName'],
+                            "REASON": data['returnReason']
+                        }
+                    })
                     return {'message': 'Return process initialed'}, 200
                 else:
                     return {'message': 'Payload incorrect'}, 500

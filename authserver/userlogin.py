@@ -6,8 +6,11 @@ from authserver import bcrypt
 from flask import request
 from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, jwt_refresh_token_required, \
     get_jwt_identity, get_raw_jwt
+
+from authserver.utils.send_email import send_email
 from authserver.validation_schemas import register, login
 from authserver.connection import run_db_query
+from secrets import secrets
 
 
 class UserRegistration(Resource):
@@ -39,6 +42,10 @@ class UserRegistration(Resource):
                     if result == 'error':
                         raise Exception
 
+                    send_email(secrets['CUSTOMER_WELCOME_TEMPLATE'], {
+                        'to_email': data['email'],
+                        'variables': {}
+                    })
                     return {'message': 'Registration success, please login'}, 200
 
                 else:
@@ -90,7 +97,7 @@ class ForgotPassword(Resource):
         if reset_pass['isValid']:
             try:
                 args = {'email': data['email']}
-                result = run_db_query('select user_id from fncheckifuseremailexists'
+                result = run_db_query('select user_id, user_firstname from fncheckifuseremailexists'
                                       '(%(email)s)', args, 'user password select from DB', True)
                 if result == 'error':
                     raise Exception
@@ -99,7 +106,7 @@ class ForgotPassword(Resource):
                     return {"message": "Email is invalid"}, 404
                 password_length = 8
                 possible_characters = "@!*&abcdefghijklmnopqrstuvwxyz1234567890"
-
+                user_name = result['user_firstname']
                 random_character_list = [random.choice(possible_characters) for i in range(password_length)]
                 random_password = "".join(random_character_list)
                 print(random_password)
@@ -111,6 +118,13 @@ class ForgotPassword(Resource):
                                       args, 'forget password reset', False)
                 if result == 'error':
                     raise Exception
+                send_email(secrets['FORGET_PASSWORD_TEMPLATE'], {
+                    'to_email': data['email'],
+                    "variables": {
+                        "NAME": user_name,
+                        "PASSWORD": random_password
+                    }
+                })
                 return {'message': 'Password reset steps sent to your email.'}, 200
             except Exception as e:
                 print(e)

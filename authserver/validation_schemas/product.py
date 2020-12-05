@@ -103,9 +103,18 @@ customer_return_schema = {
 
         "returnReason": {
             "type": "string"
+            },
+        "orderNumber": {
+            "type": "string",
+            },
+        "productName": {
+            "type": "string"
+            },
+        "userName": {
+            "type": "string"
             }
     },
-    "required": ["orderDetailsId", "returnReason"]
+    "required": ["orderDetailsId", "returnReason", "orderNumber", "productName", "userName"]
 }
 
 product_related = {

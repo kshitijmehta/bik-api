@@ -30,8 +30,11 @@ shipment_schema = {
         },
         "deleteFlag": {
             "type": "boolean"
+        },
+        "sendTrackingEmail": {
+            "type": "boolean"
         }
-    }
+    },
 }
 
 
