@@ -82,7 +82,7 @@ class UserInfo(Resource):
                                       args, 'user enter/update address in DB', True)
                 if result == 'error':
                     raise Exception
-                return {'message': 'user personal detail add success', 'data': str(result[0])}, 200
+                return {'message': 'User details saved.', 'data': str(result[0])}, 200
             except Exception as e:
                 app.logger.debug(e)
                 return {'message': 'user personal detail error'}, 500

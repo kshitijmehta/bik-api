@@ -39,13 +39,13 @@ class changepass(Resource):
                     if result == 'error':
                         raise Exception
 
-                    return {'message': 'password change success'}, 200
+                    return {'message': 'Password changed successfully.'}, 200
                 else:
                     return {'message': 'Current password is incorrect'}, 500
 
             except Exception as e:
                 app.logger.debug(e)
-                return {'message': 'cant change password'}, 500
+                return {'message': 'Some error occurred, try again.'}, 500
         else:
             return {'message': 'change password validation error'}, 500
 
