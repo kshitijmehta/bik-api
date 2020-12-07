@@ -1,6 +1,6 @@
 from datetime import datetime
 from flask_restful import Resource
-from authserver import bcrypt, admin_required
+from authserver import bcrypt, admin_required, app
 from flask import request
 from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, jwt_refresh_token_required, \
     get_jwt_identity, get_raw_jwt
@@ -26,7 +26,7 @@ class UserInfo(Resource):
                 data = login_transformer(result, args['email'], identity['usertype'] == 'a')
                 return {"message": "User select success", "data": data}, 200
         except Exception as e:
-            print(e)
+            app.logger.debug(e)
             return {'message': 'user select error'}, 500
 
     @jwt_required
@@ -84,7 +84,7 @@ class UserInfo(Resource):
                     raise Exception
                 return {'message': 'user personal detail add success', 'data': str(result[0])}, 200
             except Exception as e:
-                print(e)
+                app.logger.debug(e)
                 return {'message': 'user personal detail error'}, 500
 
         else:
@@ -105,7 +105,7 @@ class AllUserInfo(Resource):
             data = admin_user_transformer(result)
             return {"message": "User select success", "data": data}, 200
         except Exception as e:
-            print(e)
+            app.logger.debug(e)
             return {'message': 'Some error occurred, retry'}, 500
 
 
@@ -133,7 +133,7 @@ class UpdateUserDiscount(Resource):
                 return {'message': 'Discount Update'}, 200
 
             except Exception as e:
-                print(e)
+                app.logger.debug(e)
                 return {'message': 'Some error occurred'}, 500
         else:
             return {'message':'User discount schema validation error'}, 500

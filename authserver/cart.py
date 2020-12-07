@@ -2,6 +2,7 @@ from flask_jwt_extended import get_jwt_identity, jwt_required
 from flask_restful import Resource
 from flask import request
 
+from authserver import app
 from authserver.connection import run_db_query
 from authserver.transformers.cart_transformer import get_cart_transformer, add_to_cart_transformer, \
     update_cart_transformer
@@ -63,7 +64,7 @@ class CustomerCart(Resource):
                 return {'message': 'order insert,update,delete success',
                         'data': add_to_cart_transformer(result[1])}, 200
         except Exception as e:
-            print(e)
+            app.logger.debug(e)
             return {'message': ' order insert,update,delete Error'}, 500
         # else:
         #   return {'message': 'order field validation error'}, 500
@@ -85,5 +86,5 @@ class UpdateCartQuantity(Resource):
             else:
                 return {'message': 'Cart quantity is valid'}, 200
         except Exception as e:
-            print(e)
+            app.logger.debug(e)
             return {'message': 'Some error occurred, retry again'}, 500

@@ -1,6 +1,6 @@
 import datetime
 from flask_restful import Resource
-from authserver import bcrypt, admin_required
+from authserver import bcrypt, admin_required, app
 from flask import request
 from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, jwt_refresh_token_required, \
     get_jwt_identity, get_raw_jwt
@@ -19,7 +19,7 @@ class Coupondetails(Resource):
                                   'from fnCouponSelect()', args, 'coupon info select from DB', True, True)
             return {"message": "color select success", 'data': product_coupon_transformer(result)}, 200
         except Exception as e:
-            print(e)
+            app.logger.debug(e)
             return {'message': 'color select error'}, 500
 
     @admin_required
@@ -48,7 +48,7 @@ class Coupondetails(Resource):
 
                 return {'message': 'Coupon size insert,update,delete success'}, 200
             except Exception as e:
-                print(e)
+                app.logger.debug(e)
                 return {'message': 'Coupon size insert,update,delete Error'}, 500
         else:
             return {'message': 'Coupon field validation error'}, 500
@@ -71,5 +71,5 @@ class CouponValidate(Resource):
             else:
                 return {'message': 'Coupon Invalid'}, 200
         except Exception as e:
-            print(e)
+            app.logger.debug(e)
             return {'message': 'coupon code did not matched error'}, 500

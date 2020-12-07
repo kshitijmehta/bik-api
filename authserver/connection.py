@@ -1,6 +1,7 @@
 import psycopg2
 import psycopg2.extras
 import secrets
+from authserver import app
 
 
 def run_db_query(query, args, action_performed, perform_fetch, fetch_multi=False):
@@ -27,7 +28,7 @@ def run_db_query(query, args, action_performed, perform_fetch, fetch_multi=False
 
     except Exception as e:
         print('action_performed:', action_performed)
-        print(e)
+        app.logger.debug(e)
         print(cur.query)
         return 'error'
 
@@ -56,6 +57,7 @@ def run_db_query_multiple(query, args, action_performed, perform_fetch, can_comm
     except (Exception, psycopg2.DatabaseError) as e:
         print('action_performed:', action_performed)
         print("Error in Action Reverting all other operations of a Action ", e)
+        app.logger.debug(e)
         conn.rollback()
         return 'error'
 

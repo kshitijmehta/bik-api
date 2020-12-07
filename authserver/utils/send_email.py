@@ -1,6 +1,7 @@
 import http.client
 import json
 
+from authserver import app
 from secrets import secrets
 
 
@@ -25,5 +26,5 @@ def send_email(template_id, payload_data):
 
     except Exception as e:
         conn.close()
-        print(e)
+        app.logger.debug(e)
 

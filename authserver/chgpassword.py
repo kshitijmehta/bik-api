@@ -1,5 +1,5 @@
 from flask_restful import Resource
-from authserver import bcrypt
+from authserver import bcrypt, app
 from flask import request
 from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, jwt_refresh_token_required, \
     get_jwt_identity, get_raw_jwt
@@ -44,7 +44,7 @@ class changepass(Resource):
                     return {'message': 'Current password is incorrect'}, 500
 
             except Exception as e:
-                print(e)
+                app.logger.debug(e)
                 return {'message': 'cant change password'}, 500
         else:
             return {'message': 'change password validation error'}, 500
@@ -57,5 +57,5 @@ class changepass(Resource):
                 return {'message': 'get user setting success', 'data': {'emailAddress': identity['email']}}, 200
             return {'message': 'could not validate user', }, 500
         except Exception as e:
-            print(e)
+            app.logger.debug(e)
             return {'message': 'could not validate user exception', }, 500

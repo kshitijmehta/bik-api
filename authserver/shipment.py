@@ -1,6 +1,6 @@
 import datetime
 from flask_restful import Resource
-from authserver import bcrypt, admin_required
+from authserver import bcrypt, admin_required, app
 from flask import request
 from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, jwt_refresh_token_required, \
     get_jwt_identity, get_raw_jwt
@@ -23,7 +23,7 @@ class ShipperDetails(Resource):
 
             return {"message": "shipper info select success", 'data': shipment_transformer(result)}, 200
         except Exception as e:
-            print(e)
+            app.logger.debug(e)
             return {'message': 'shipper select error'}, 500
 
     @admin_required
@@ -52,7 +52,7 @@ class ShipperDetails(Resource):
                     raise Exception
                 return {'message': 'shipper details saved'}, 200
             except Exception as e:
-                print(e)
+                app.logger.debug(e)
                 return {'message': 'shipper details insert,update,delete Error'}, 500
         else:
             return {'message': 'shipper field validation error'}, 500
@@ -121,7 +121,7 @@ class ShipmentDetails(Resource):
                     })
                 return {'message': 'Shipment details saved.'}, 200
             except Exception as e:
-                print(e)
+                app.logger.debug(e)
                 return {'message': 'Some error occurred, try again.'}, 500
         else:
             return {'message': 'shipper field validation error'}, 500

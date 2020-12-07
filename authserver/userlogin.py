@@ -2,7 +2,7 @@ import datetime
 import random
 
 from flask_restful import Resource
-from authserver import bcrypt
+from authserver import bcrypt, app
 from flask import request
 from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, jwt_refresh_token_required, \
     get_jwt_identity, get_raw_jwt
@@ -51,7 +51,7 @@ class UserRegistration(Resource):
                 else:
                     return {'message': 'User already exists, trying login'}, 500
             except Exception as e:
-                print(e)
+                app.logger.debug(e)
                 return {'message': 'user registration error'}, 500
 
         else:
@@ -83,7 +83,7 @@ class UserLogin(Resource):
                     return {"message": "Invalid credentials"}, 500
 
             except Exception as e:
-                print(e)
+                app.logger.debug(e)
                 return {'message': 'user login error'}, 500
 
         else:
@@ -127,7 +127,7 @@ class ForgotPassword(Resource):
                 })
                 return {'message': 'Password reset steps sent to your email.'}, 200
             except Exception as e:
-                print(e)
+                app.logger.debug(e)
                 return {'message': 'Please try again.'}, 500
 
 

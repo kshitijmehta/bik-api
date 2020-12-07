@@ -1,6 +1,8 @@
 import os
 import uuid
 
+from authserver import app
+
 
 def save_image(args, *images):
     try:
@@ -16,7 +18,7 @@ def save_image(args, *images):
 
     except Exception as e:
         print('error in save image')
-        print(e)
+        app.logger.debug(e)
         return 'error'
 
 
@@ -26,7 +28,7 @@ def delete_image(images):
             os.remove(os.path.join('authserver/images', value))
 
     except Exception as e:
-        print(e)
+        app.logger.debug(e)
         return 'error'
 
 
@@ -41,7 +43,7 @@ def create_image_query(images):
         return image_query[:-1] + ')'
 
     except Exception as e:
-        print(e)
+        app.logger.debug(e)
         return 'error'
 
 
@@ -53,7 +55,7 @@ def update_arg_for_image(data):
             args[value] = value
         return args
     except Exception as e:
-        print(e)
+        app.logger.debug(e)
         return 'error'
 
 
@@ -72,5 +74,5 @@ def create_tuple_for_product_details(combo_data, product_id, inr_price, usd_pric
         product_details = product_details[:-1]
         return product_details
     except Exception as e:
-        print(e)
+        app.logger.debug(e)
         return e

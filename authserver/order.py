@@ -12,7 +12,7 @@ from paypalcheckoutsdk.core import SandboxEnvironment, PayPalHttpClient
 from paypalcheckoutsdk.orders import OrdersCreateRequest, OrdersGetRequest
 from paypalhttp import HttpError
 
-from authserver import admin_required
+from authserver import admin_required, app
 from authserver.connection import run_db_query
 from authserver.transformers.admin_orders_transformer import admin_orders
 from authserver.transformers.customer_orders_transformer import customer_orders
@@ -78,7 +78,7 @@ class PlaceOrder(Resource):
             else:
                 return {'message': 'Validation error, try again'}, 500
         except Exception as e:
-            print(e)
+            app.logger.debug(e)
             return {'message': 'error', 'data': e}, 500
 
 
@@ -133,7 +133,7 @@ class PaymentSuccessRazorpay(Resource):
                                    ' If the money has been deducted, please wait'
                                    ' for sometime and check the status of your order.'}, 500
         except Exception as e:
-            print(e)
+            app.logger.debug(e)
             return {'message': 'The payment was not authentic. '
                                'Please try again or wait for sometime for us to check'}, 500
 
@@ -214,7 +214,7 @@ class PlaceOrderPaypal(Resource):
                 return {'message': 'Validation error, try again'}, 500
 
         except Exception as e:
-            print(e)
+            app.logger.debug(e)
             return {'message': 'Error while completing payment, please retry.'
                                ' If the issue still persists, try after sometime.'}, 500
 
@@ -259,7 +259,7 @@ class PaymentSuccessPaypal(Resource):
                                    ' If the money has been deducted, please wait'
                                    ' for sometime and check the status of your order.'}, 500
         except Exception as e:
-            print(e)
+            app.logger.debug(e)
             return {'message': 'Some error occurred while processing the payment.'
                                ' If the money has been deducted, please wait'
                                ' for sometime and check the status of your order.'}, 500
@@ -332,7 +332,7 @@ class PlaceOrderCOD(Resource):
             else:
                 return {'message': 'Error occurred, try again please.'}, 500
         except Exception as e:
-            print(e)
+            app.logger.debug(e)
             return {'message': 'Error occurred, please try again'}, 500
 
 
@@ -399,7 +399,7 @@ class ResendCODOTP(Resource):
             else:
                 return {'message': 'User Auth is missing.'}, 401
         except Exception as e:
-            print(e)
+            app.logger.debug(e)
             return {'message': 'Error occurred, please try again'}, 500
 
 
@@ -459,7 +459,7 @@ class CheckCODStatus(Resource):
             else:
                 return {'message': 'Validation error, retry again.'}
         except Exception as e:
-            print(e)
+            app.logger.debug(e)
             return {'message': 'Error occurred, please try again.'}, 500
 
 
@@ -490,7 +490,7 @@ class GetCustomerOrders(Resource):
             else:
                 return {'message': 'Invalid Auth'}, 401
         except Exception as e:
-            print(e)
+            app.logger.debug(e)
             return {'message': 'get productlist for customer error'}, 500
 
 
@@ -518,7 +518,7 @@ class GetAdminOrders(Resource):
             else:
                 return {'message': 'Invalid Auth'}, 401
         except Exception as e:
-            print(e)
+            app.logger.debug(e)
             return {'message': 'get productlist for customer error'}, 500
 
 
@@ -563,5 +563,5 @@ class CustomerReturn(Resource):
             else:
                 return {'message': 'User Invalid, login again'}, 401
         except Exception as e:
-            print(e)
+            app.logger.debug(e)
             return {'message': 'error while processing return'}, 500

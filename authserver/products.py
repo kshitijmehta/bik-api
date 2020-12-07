@@ -4,7 +4,7 @@ import os
 
 import werkzeug
 from flask_restful import Resource, reqparse
-from authserver import bcrypt, admin_required
+from authserver import bcrypt, admin_required, app
 from flask import request
 from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, jwt_refresh_token_required, \
     get_jwt_identity, get_raw_jwt
@@ -32,7 +32,7 @@ class Productsizeinsert(Resource):
                                   'from fnSizeSelect()', args, 'user info select from DB', True, True)
             return {"message": "color select success", 'data': product_size_transformer(result)}, 200
         except Exception as e:
-            print(e)
+            app.logger.debug(e)
             return {'message': 'color select error'}, 500
 
     @admin_required
@@ -62,7 +62,7 @@ class Productsizeinsert(Resource):
 
                 return {'message': 'Size and code Insert success'}, 200
             except Exception as e:
-                print(e)
+                app.logger.debug(e)
                 return {'message': 'Size and code Insert Error'}, 500
         else:
             return {'message': 'Product field validation error'}, 500
@@ -79,7 +79,7 @@ class Productcolourinsert(Resource):
 
             return {'message': 'color select success', 'data': product_colour_transformer(result)}, 200
         except Exception as e:
-            print(e)
+            app.logger.debug(e)
             return {'message': 'color select error'}, 500
 
     @admin_required
@@ -102,7 +102,7 @@ class Productcolourinsert(Resource):
                              args, 'Admin enter product color DB', False)
                 return {'message': 'Color and code Insert success'}, 200
             except Exception as e:
-                print(e)
+                app.logger.debug(e)
             return {'message': 'Color and code Insert Error'}, 500
         else:
             return {'message': 'Product field validation error'}, 500
@@ -132,7 +132,7 @@ class Productinformation(Resource):
                        'singleData': single_product_transformer(result)[0]
                    }, 200
         except Exception as e:
-            print(e)
+            app.logger.debug(e)
             return {'message': 'product info details select error'}, 500
 
     @admin_required
@@ -293,7 +293,7 @@ class Productinformation(Resource):
 
                 return {'message': 'Product details Insert success'}, 200
             except Exception as e:
-                print(e)
+                app.logger.debug(e)
                 error_at = ''
                 if image_save_status != 'error':
                     # delete images if the error was
@@ -344,7 +344,7 @@ class ProductCategory(Resource):
             return {"message": "product category details select success",
                     'data': product_category_transformer(result, identity['usertype'] == 'a' if identity else False)}, 200
         except Exception as e:
-            print(e)
+            app.logger.debug(e)
             return {'message': 'product category details select error'}, 500
 
 
@@ -359,7 +359,7 @@ class Productsubcategoryinformation(Resource):
             return {"message": "product sub category details select success",
                     'data': product_subcategory_transformer(result)}, 200
         except Exception as e:
-            print(e)
+            app.logger.debug(e)
             return {'message': 'SubCategory details select error'}, 500
 
     @admin_required
@@ -386,7 +386,7 @@ class Productsubcategoryinformation(Resource):
 
                 return {'message': 'SubCategory type Insert success'}, 200
             except Exception as e:
-                print(e)
+                app.logger.debug(e)
             return {'message': 'SubCategory type insert error'}, 500
         else:
             return {'message': 'SubCategory field validation error'}, 500
@@ -406,7 +406,7 @@ class Productcount(Resource):
                                   'from vw_product_counts', args, 'product count view', True, True)
             return {"message": "product count success", 'data': product_count_transformer(result)}, 200
         except Exception as e:
-            print(e)
+            app.logger.debug(e)
             return {'message': 'product count error'}, 500
 
 
@@ -474,7 +474,7 @@ class ProductListCustomer(Resource):
 
             return {"message": "get productlist for customer", 'data': product_list_customer_transformer(result)}, 200
         except Exception as e:
-            print(e)
+            app.logger.debug(e)
             return {'message': 'get productlist for customer error'}, 500
 
 
@@ -498,7 +498,7 @@ class ProductHighlight(Resource):
                 raise Exception
             return {'message': 'Highlight saved.'}, 200
         except Exception as e:
-            print(e)
+            app.logger.debug(e)
             return {'message': 'Some error occurred, try again'}, 500
 
 
@@ -525,7 +525,7 @@ class ProductReturn(Resource):
                              args, 'return flags added or changed  in DB', False)
                 return {'message': 'return flags add or change success'}, 200
             except Exception as e:
-                print(e)
+                app.logger.debug(e)
                 return {'message': 'return flags add or change Error'}, 500
         else:
             return {'message': 'return field validation error'}, 500
@@ -551,7 +551,7 @@ class ProductRelated(Resource):
             else:
                 return {'message': 'related product validation error'}, 500
         except Exception as e:
-            print(e)
+            app.logger.debug(e)
             return {'message': 'related products return error'}, 500
 
 
@@ -571,5 +571,5 @@ class TrendingLatest(Resource):
             else:
                 return {"message": "No tye defined"}, 500
         except Exception as e:
-            print(e)
+            app.logger.debug(e)
             return {'message': 'trending latest product select error'}, 500
