@@ -10,10 +10,9 @@ def product_list_customer_transformer(data):
             'priceUSD': str(product_obj['usdprice']),
             'colour': product_obj['colour'],
             'size': product_obj['size'],
-            'quantity': product_obj['qty'],
             'imagePaths': product_obj['prodimgpath'],
             'imageNames': product_obj['prodimgname'],
-            'productDetailId': str(product_obj['proddetailid']),
+            'productDetailId': str(product_obj['proddetailid'].split(",")[0]),
             'subCategoryName': product_obj['prodsubcategory']
         })
     return res

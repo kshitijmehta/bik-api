@@ -396,13 +396,13 @@ class Productcount(Resource):
     def get(self):
         try:
             args = ''
-            result = run_db_query('select prod_subcategory_id,'
-                                  'prod_subcategroy_name, '
-                                  'colour_id, '
-                                  'colour_name, '
-                                  'size_id, '
-                                  'size_name, '
-                                  'prod_count '
+            result = run_db_query('select prod_subcateg_id,'
+                                  'prod_subacateg_name, '
+                                  'prod_colour, '
+                                  'colour_value, '
+                                  # 'size_id, '
+                                  'prod_size '
+                                  # 'prod_count '
                                   'from vw_product_counts', args, 'product count view', True, True)
             return {"message": "product count success", 'data': product_count_transformer(result)}, 200
         except Exception as e:
@@ -461,7 +461,7 @@ class ProductListCustomer(Resource):
                         args['price'] = 'prod_usd_price <= ' + str(ep)
             # print(args)
             result = run_db_query('select prodid, prodcategory,prodsubcategory ,prodname, proddesc, inrprice, '
-                                  'usdprice, colour, size, qty, prodimgpath, prodimgname, proddetailid '
+                                  'usdprice, colour, size, prodimgpath, prodimgname, proddetailid '
                                   'from fnproductlistselect('
                                   '_colour=>%(cid)s, '
                                   '_size=>%(sid)s, '

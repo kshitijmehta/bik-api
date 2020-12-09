@@ -13,10 +13,11 @@ def run_db_query(query, args, action_performed, perform_fetch, fetch_multi=False
                                 f"host='{secrets.secrets['DB_HOST']}' "
                                 f"password='{secrets.secrets['DB_PASSWORD']}'")
         cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        # print(query)
+
         # print('/n')
         # print(args)
         cur.execute(query, args)
+        print(cur.query)
         result = None
         if perform_fetch:
             if fetch_multi:
