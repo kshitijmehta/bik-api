@@ -543,7 +543,7 @@ class GetCustomerOrders(Resource):
 
                 # print(args)
                 result = run_db_query('select order_id, order_totalprice, order_paymentdate, '
-                                      ' payment_type_name, orderitems, order_number'
+                                      ' payment_type_name, orderitems, order_number, coupon_value, user_discount'
                                       ' from store.order_view '
                                       ' where user_id =' + str(args['user_id']) + ' '
                                                                                   ' LIMIT ' + args[
@@ -575,7 +575,7 @@ class GetAdminOrders(Resource):
                 # print(args)
                 result = run_db_query('select order_id, order_totalprice, order_paymentdate, '
                                       ' payment_type_name, orderitems, order_number, userdetails, '
-                                      'razorpay_payment_id, paypal_response, standard_shipping '
+                                      'razorpay_payment_id, paypal_response, standard_shipping, coupon_value, user_discount '
                                       ' from store.customer_order_view ' +
                                       user_clause, args, 'get customer orders', True, True)
                 if result == 'error':

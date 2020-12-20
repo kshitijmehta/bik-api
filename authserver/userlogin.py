@@ -72,7 +72,7 @@ class UserLogin(Resource):
                     raise Exception
 
                 if not result:
-                    return {"message": "User already exists"}, 500
+                    return {"message": "User does not exists"}, 500
                 password = data['password'].encode('utf-8')
                 if bcrypt.check_password_hash(result['userpassword'], password):
                     access_token = create_access_token(identity={'email': args['email'], 'id': result['userid'],

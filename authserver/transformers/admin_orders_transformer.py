@@ -35,6 +35,8 @@ def admin_orders(data):
             'razorpayPaymentId': orders_obj['razorpay_payment_id'],
             'paypalResponse': orders_obj['paypal_response'],
             'standardShipping': orders_obj['standard_shipping'],
-            'userDetails': login_transformer(orders_obj['userdetails'][0], orders_obj['userdetails'][0]['emailid'],False)
+            'userDetails': login_transformer(orders_obj['userdetails'][0], orders_obj['userdetails'][0]['emailid'],False),
+            'couponDiscount': orders_obj['coupon_value'],
+            'userDiscount': orders_obj['user_discount'],
         })
     return res
