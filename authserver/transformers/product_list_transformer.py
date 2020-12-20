@@ -8,7 +8,9 @@ def product_list_transformer(data):
             'description': size_obj['proddesc'],
             'latest': size_obj['latest'],
             'trending': size_obj['trending'],
-            'quantity': size_obj['qty']
+            'quantity': size_obj['qty'],
+            'listSingleImage': size_obj['imagepath'],
+            'subCategory' : size_obj['prodsubcategoryid']
         })
     return res
 
@@ -31,6 +33,7 @@ def single_product_transformer(data):
             'colourId': size_obj['colourid'],
             'imageNames': size_obj['imagename'],
             'imagePaths': size_obj['imagepath'],
-            'productDetailId': size_obj['proddetailid']
+            'productDetailId': size_obj['proddetailid'],
+            'isActive': size_obj['proddatetill'] is None
         })
     return res

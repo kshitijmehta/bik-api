@@ -115,7 +115,7 @@ class Productinformation(Resource):
             args = request.args.getlist('productId')
             if not args:
                 result = run_db_query(
-                    'select prodid , prodcategory , prodname, proddesc, qty, trending, latest from '
+                    'select prodid ,prodsubcategoryid, prodcategory , prodname, proddesc, qty, trending, latest, imagepath from '
                     'fnAdminProductSelect()',
                     args, 'Prod info select select from DB', True, True)
 
@@ -123,7 +123,7 @@ class Productinformation(Resource):
             else:
                 result = run_db_query(
                     'select prodid , prodcategory , prodname, proddesc, inrprice, usdprice, colour, size, proddetailid,'
-                    'qty, subcategoryid, sizeid, colourid, imagename, imagepath from fnsingleproductselect(' + args[
+                    'qty, subcategoryid, sizeid, colourid, imagename, imagepath, proddatetill from fnsingleproductselect(' + args[
                         0] + ')',
                     args, 'Prod info select select from DB', True, True)
 
@@ -245,7 +245,7 @@ class Productinformation(Resource):
                         if update_pd_result == 'error':
                             raise Exception
 
-                if int(data['prod_id']) != 0:
+                if int(data['prod_id']) != 0 and args['ser'] != 3:
                     update_pd_price = run_db_query('call spproductdetails_price_update ('
                                                    '_prod_id=>%(prod_id)s, '
                                                    '_inrprice=>%(product_INR_price)s,'

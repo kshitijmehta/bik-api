@@ -16,7 +16,8 @@ from authserver import admin_required, app
 from authserver.connection import run_db_query
 from authserver.transformers.admin_orders_transformer import admin_orders
 from authserver.transformers.customer_orders_transformer import customer_orders
-from authserver.utils.send_email import send_email
+from authserver.transformers.order_data_csv_transformer import order_data_csv_transformer
+from authserver.utils.send_email import send_email, customer_order_details_helper
 from authserver.validation_schemas import order
 from authserver.validation_schemas.product import customer_returns
 from secrets import secrets
@@ -98,6 +99,7 @@ class PaymentSuccessRazorpay(Resource):
                             'order_number': data['orderNumber'],
                             'address_id': data['addressId'],
                             'user_id': identity['id'],
+                            'userName': data['userName'], 'userAddress': data['userAddress'],
                             'coupon_id': data['couponId'] if 'couponId' in data else None}
                     params_dict = {
                         'razorpay_order_id': args['razorpay_order_id'],
@@ -121,6 +123,26 @@ class PaymentSuccessRazorpay(Resource):
                                               'save payment success for razorpay', True)
 
                         if result[0] == 200:
+                            # send order detail mail to customer
+                            result = run_db_query('select productname, totalamount,'
+                                                  'coupondiscount, userdiscount from public.fngetorderdetailsformail'
+                                                  '(%(order_id)s)', args, 'user info select from DB', True, True)
+                            if result == 'error':
+                                app.logger.debug('Error in sending order detail mail to customer')
+                                # raise Exception
+                            product_data = customer_order_details_helper(result)
+
+                            send_email(secrets['CUSTOMER_ORDER_DETAILS_TEMPLATE'], {
+                                "to_email": identity['email'],
+                                "variables": {
+                                    "NAME": args['userName'],
+                                    "ADDRESS": args['userAddress'],
+                                    "ORDERNUMBER": "#" + str(args['order_number']),
+                                    "ORDERDATE": date.today().strftime("%m/%d/%Y"),
+                                    "PRODUCTIST": product_data['product_list'],
+                                    "TOTALAMOUNT": product_data['total_amount'],
+                                }
+                            })
                             return {'message': 'success'}, 200
                         else:
                             return {'message': 'Some error occurred while processing the payment.'
@@ -230,6 +252,7 @@ class PaymentSuccessPaypal(Resource):
                 if identity['id']:
                     args = {'paypal_response': json.dumps(data['paypalResponse']), 'order_id': data['orderId'],
                             'address_id': data['addressId'],'user_id': identity['id'], 'quantity': data['quantity'],
+                            'userName': data['userName'],'userAddress': data['userAddress'],
                             'order_number': str(identity['id']) + '-' + str(int(round(time.time() * 1000))),
                             'coupon_id': data['couponId'] if 'couponId' in data else None,
                             'is_standard': data['isStandard']}
@@ -246,6 +269,26 @@ class PaymentSuccessPaypal(Resource):
                                           'save payment success for paypal', True)
 
                     if result[0] == 200:
+                        # send order detail mail to customer
+                        result = run_db_query('select productname, totalamount,'
+                                              'coupondiscount, userdiscount from public.fngetorderdetailsformail'
+                                              '(%(order_id)s)', args, 'user info select from DB', True, True)
+                        if result == 'error':
+                            app.logger.debug('Error in sending order detail mail to customer')
+                            # raise Exception
+                        product_data = customer_order_details_helper(result)
+
+                        send_email(secrets['CUSTOMER_ORDER_DETAILS_TEMPLATE'], {
+                            "to_email": identity['email'],
+                            "variables": {
+                                "NAME": args['userName'],
+                                "ADDRESS": args['userAddress'],
+                                "ORDERNUMBER": "#" + str(args['order_number']),
+                                "ORDERDATE": date.today().strftime("%m/%d/%Y"),
+                                "PRODUCTIST": product_data['product_list'],
+                                "TOTALAMOUNT": product_data['total_amount'],
+                            }
+                        })
                         return {
                                    'message': 'Payment successful ! You can check you order details from order section.'}, 200
                     else:
@@ -416,6 +459,8 @@ class CheckCODStatus(Resource):
                     args = {'ser_id': 2, 'user_id': identity['id'], 'user_otp': data['otp'],
                             'order_id': data['orderId'],
                             'address_id': data['addressId'],
+                            'userName': data['userName'],
+                            'userAddress': data['userAddress'],
                             'coupon_id': data['couponId'] if 'couponId' in data else None,
                             'order_number': str(identity['id']) + str(int(round(time.time() * 1000)))}
                     # Getting mobile number from DB
@@ -451,6 +496,27 @@ class CheckCODStatus(Resource):
                                               args, 'Payment save for COD', False)
                         if result == 'error':
                             raise Exception
+
+                        #send order detail mail to customer
+                        result = run_db_query('select productname, totalamount,'
+                                              'coupondiscount, userdiscount from public.fngetorderdetailsformail'
+                                              '(%(order_id)s)', args, 'user info select from DB', True, True)
+                        if result == 'error':
+                            app.logger.debug('Error in sending order detail mail to customer')
+                            # raise Exception
+                        product_data = customer_order_details_helper(result)
+
+                        send_email(secrets['CUSTOMER_ORDER_DETAILS_TEMPLATE'], {
+                            "to_email": identity['email'],
+                            "variables": {
+                                "NAME": args['userName'],
+                                "ADDRESS": args['userAddress'],
+                                "ORDERNUMBER": "#" + str(args['order_number']),
+                                "ORDERDATE": date.today().strftime("%m/%d/%Y"),
+                                "PRODUCTIST": product_data['product_list'],
+                                "TOTALAMOUNT": product_data['total_amount'],
+                            }
+                        })
                         return {'message': 'Payment Success'}, 200
                     else:
                         return {'message': 'OTP incorrect, please try again.'}, 500
@@ -565,3 +631,20 @@ class CustomerReturn(Resource):
         except Exception as e:
             app.logger.debug(e)
             return {'message': 'error while processing return'}, 500
+
+
+class OrderDataForCsv(Resource):
+    @admin_required
+    def get(self):
+        try:
+            result = run_db_query('select orderdetailid, prod_category, prod_name, '
+                                  ' addr_state, qty, paymenttype, paymentmode, '
+                                  'originaltotal, userdiscount, coupondiscount, orderreturned '
+                                  ' from store.fngetorderdatacsv() ', {},
+                                  'get order data for csv', True, True)
+            if result == 'error':
+                raise Exception
+            return {"message": "success get order data for csv", "data":order_data_csv_transformer(result)}, 200
+        except Exception as e:
+            app.logger.debug(e)
+            return {'message': 'get order data for csv error'}, 500

@@ -40,9 +40,15 @@ razorpay_payment_success = {
         },
         "addressId": {
             "type": ["integer", "string"]
-        }
+        },
+        "userAddress": {
+            "type": "string"
+        },
+        "userName": {
+            "type": "string"
+        },
     },
-    "required": ["razorpayPaymentId", "razorpayOrderId", "razorpaySignature", "orderId", "orderNumber", "addressId"]
+    "required": ["razorpayPaymentId", "razorpayOrderId", "razorpaySignature", "orderId", "orderNumber", "addressId","userAddress","userName"]
 }
 
 paypal_payment_success = {
@@ -65,9 +71,15 @@ paypal_payment_success = {
         },
         "quantity": {
             "type": "integer"
-        }
+        },
+        "userAddress": {
+            "type": "string"
+        },
+        "userName": {
+            "type": "string"
+        },
     },
-    "required": ["paypalResponse", "orderId","addressId","isStandard","quantity"]
+    "required": ["paypalResponse", "orderId","addressId","isStandard","quantity","userAddress","userName"]
 }
 
 cod_status = {
@@ -81,9 +93,15 @@ cod_status = {
         },
         "addressId": {
             "type": ["integer", "string"]
-        }
+        },
+        "userAddress": {
+            "type": "string"
+        },
+        "userName": {
+            "type": "string"
+        },
     },
-    "required": ["otp", "orderId", "addressId"]
+    "required": ["otp", "orderId", "addressId","userAddress","userName"]
 }
 
 def validate_razorpay_paypal_cod_order(data):
