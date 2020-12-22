@@ -1,4 +1,5 @@
-from authserver import app, userlogin, userdetails, chgpassword, products, cart, api, coupons, order, shipment
+from authserver import app, userlogin, userdetails, chgpassword, products, cart, api, coupons, order, shipment, \
+    contactus
 
 """Resources"""
 api.add_resource(userlogin.UserRegistration, '/v1/registration')
@@ -36,3 +37,4 @@ api.add_resource(userlogin.ForgotPassword,'/v1/forgetpassword')
 api.add_resource(cart.UpdateCartQuantity, '/v1/updatecartquantity')
 api.add_resource(products.ProductCategory,'/v1/productcategory')
 api.add_resource(order.OrderDataForCsv, '/v1/getorderdatacsv')
+api.add_resource(contactus.SendContactUs, '/v1/contactus')

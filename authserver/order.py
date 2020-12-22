@@ -358,7 +358,7 @@ class PlaceOrderCOD(Resource):
 
                         conn.request('GET', '/api/v5/otp?'
                                             'authkey=346784A9nXIgTbv5faa2c51P1'
-                                            '&template_id=5fab7dd9c7f9882608603eca'
+                                            '&template_id=5fce40f13ac98500e65d2890'
                                             '&mobile=' + ''.join(e for e in mobile_number if e.isalnum())
                                      , headers=headers)
                         res = conn.getresponse()
@@ -427,7 +427,7 @@ class ResendCODOTP(Resource):
                     if data['message'] == 'OTP retry count maxed out':
                         conn.request('GET', '/api/v5/otp?'
                                             'authkey=346784A9nXIgTbv5faa2c51P1'
-                                            '&template_id=5fab7dd9c7f9882608603eca'
+                                            '&template_id=5fce40f13ac98500e65d2890'
                                             '&mobile=' + ''.join(e for e in mobile_number if e.isalnum())
                                      , headers=headers)
                         res = conn.getresponse()
