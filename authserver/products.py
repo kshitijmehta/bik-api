@@ -460,7 +460,8 @@ class ProductListCustomer(Resource):
                     else:
                         args['price'] = 'prod_usd_price <= ' + str(ep)
             # print(args)
-            result = run_db_query('select prodid, prodcategory,prodsubcategory ,prodname, proddesc, inrprice, '
+            result = run_db_query('select setseed(to_char(CURRENT_DATE,\'YYYYMMDD\')::float/100000000);'
+                                  'select prodid, prodcategory,prodsubcategory ,prodname, proddesc, inrprice, '
                                   'usdprice, colour, size, prodimgpath, prodimgname, proddetailid '
                                   'from fnproductlistselect('
                                   '_colour=>%(cid)s, '
