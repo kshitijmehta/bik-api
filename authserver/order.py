@@ -8,7 +8,7 @@ from flask_restful import Resource
 from flask_jwt_extended import get_jwt_identity, jwt_required
 from flask import request
 import razorpay
-from paypalcheckoutsdk.core import SandboxEnvironment, PayPalHttpClient
+from paypalcheckoutsdk.core import SandboxEnvironment, PayPalHttpClient, LiveEnvironment
 from paypalcheckoutsdk.orders import OrdersCreateRequest, OrdersGetRequest
 from paypalhttp import HttpError
 
@@ -62,10 +62,10 @@ class PlaceOrder(Resource):
 
                         if response['id']:
                             response_data = {
-                                'key': 'rzp_test_WDzaF0uIiGcdMu',
+                                'key': secrets['LIVE_RAZORPAY_ID'],
                                 'amount': order_amount,
                                 'currency': order_currency,
-                                'name': 'Basic Kart',
+                                'name': 'BasicKart',
                                 'orderId': response['id'],
                                 'receipt': order_receipt
                             }
@@ -190,7 +190,8 @@ class PlaceOrderPaypal(Resource):
                         client_secret = secrets['LIVE_PAYPAL_SECRET']
 
                         # Creating an environment
-                        environment = SandboxEnvironment(client_id=client_id, client_secret=client_secret)
+                        # environment = SandboxEnvironment(client_id=client_id, client_secret=client_secret)
+                        environment = LiveEnvironment(client_id=client_id, client_secret=client_secret)
                         client = PayPalHttpClient(environment)
                         order_request = OrdersCreateRequest()
 
