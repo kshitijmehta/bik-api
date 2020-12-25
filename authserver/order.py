@@ -48,7 +48,7 @@ class PlaceOrder(Resource):
                     if result == 'error':
                         raise Exception
                     elif result['status']:
-                        client = razorpay.Client(auth=(secrets['TEST_RAZORPAY_ID'], secrets['TEST_RAZORPAY_SECRET']))
+                        client = razorpay.Client(auth=(secrets['LIVE_RAZORPAY_ID'], secrets['LIVE_RAZORPAY_SECRET']))
                         today = date.today()
                         order_amount = float(args['user_amount']) * 100
                         order_currency = 'INR'
@@ -106,7 +106,7 @@ class PaymentSuccessRazorpay(Resource):
                         'razorpay_payment_id': args['razorpay_payment_id'],
                         'razorpay_signature': args['razorpay_signature']}
 
-                    client = razorpay.Client(auth=(secrets['TEST_RAZORPAY_ID'], secrets['TEST_RAZORPAY_SECRET']))
+                    client = razorpay.Client(auth=(secrets['LIVE_RAZORPAY_ID'], secrets['LIVE_RAZORPAY_SECRET']))
                     is_payment_authentic = client.utility.verify_payment_signature(params_dict)
                     if is_payment_authentic is None:
 
@@ -186,8 +186,8 @@ class PlaceOrderPaypal(Resource):
                         raise Exception
                     elif result['status']:
                         # Creating Access Token for Sandbox
-                        client_id = secrets['SANDBOX_PAYPAL_ID']
-                        client_secret = secrets['SANDBOX_PAYPAL_SECRET']
+                        client_id = secrets['LIVE_PAYPAL_ID']
+                        client_secret = secrets['LIVE_PAYPAL_SECRET']
 
                         # Creating an environment
                         environment = SandboxEnvironment(client_id=client_id, client_secret=client_secret)
