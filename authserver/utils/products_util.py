@@ -12,7 +12,7 @@ def save_image(args, *images):
             if image_file is not None:
                 image_uuid = str(uuid.uuid4())
                 image_extension = os.path.splitext(image_file.filename)[1]
-                image_file.save(os.path.join('authserver/images', image_uuid + image_extension))
+                image_file.save(os.path.join('authserver/scaledImages', image_uuid + image_extension))
                 uuids[image_file.filename] = image_uuid + image_extension
         return uuids
 
@@ -25,7 +25,7 @@ def save_image(args, *images):
 def delete_image(images):
     try:
         for key, value in images.items():
-            os.remove(os.path.join('authserver/images', value))
+            os.remove(os.path.join('authserver/scaledImages', value))
 
     except Exception as e:
         app.logger.debug(e)

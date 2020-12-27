@@ -7,7 +7,7 @@ from flask_bcrypt import Bcrypt
 import secrets
 import logging
 
-app = Flask(__name__, static_folder='images')
+app = Flask(__name__, static_folder='scaledImages')
 app.config['JWT_SECRET_KEY'] = secrets.secrets['JWT_SECRET_KEY']
 app.config['PROPAGATE_EXCEPTIONS'] = True
 
