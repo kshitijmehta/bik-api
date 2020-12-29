@@ -15,6 +15,7 @@ def admin_orders(data):
                 'currency': items['orderdetail_price_id'],
                 'productPrice': str(items['orderdetail_price']),
                 'productImage': items['prod_img_path'],
+                'size': items['size_value'],
                 'shipmentDetails': {
                     'shipmentId': items['shipment_id'],
                     'shipper': items['shipper_id'],
