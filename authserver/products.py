@@ -16,7 +16,7 @@ from authserver.transformers.product_list_transformer import product_list_transf
 from authserver.transformers.product_size_transformer import product_size_transformer
 from authserver.transformers.product_subcategory_transformer import product_subcategory_transformer
 from authserver.utils.products_util import save_image, delete_image, create_image_query, update_arg_for_image, \
-    create_tuple_for_product_details
+    create_tuple_for_product_details, delete_image_while_update
 from authserver.validation_schemas import product
 from authserver.connection import run_db_query, run_db_query_multiple
 from authserver.transformers.product_colour_transformer import product_colour_transformer
@@ -283,6 +283,7 @@ class Productinformation(Resource):
                 # Delete images on updated
                 if args['ser'] == 2 and len(args['deleted_image_paths']) > 0:
                     args['ser_image'] = 3
+                    delete_image_while_update(args['deleted_image_paths'])
                     delete_images = run_db_query('call spImageInsertUpdateDelete ('
                                                  '_ser=>%(ser_image)s, '
                                                  '_prodid=>%(prod_id)s,'
