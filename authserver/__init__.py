@@ -7,7 +7,7 @@ from flask_bcrypt import Bcrypt
 import secrets
 import logging
 
-app = Flask(__name__, static_folder='scaledImages')
+app = Flask(__name__)
 app.config['JWT_SECRET_KEY'] = secrets.secrets['JWT_SECRET_KEY']
 app.config['PROPAGATE_EXCEPTIONS'] = True
 
@@ -19,6 +19,7 @@ gunicorn_error_logger = logging.getLogger('gunicorn.error')
 app.logger.handlers.extend(gunicorn_error_logger.handlers)
 app.logger.setLevel(logging.DEBUG)
 app.logger.debug('this will show in the log')
+
 
 @jwt.user_claims_loader
 def add_claims_to_access_token(identity):

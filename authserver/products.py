@@ -5,7 +5,7 @@ import os
 import werkzeug
 from flask_restful import Resource, reqparse
 from authserver import bcrypt, admin_required, app
-from flask import request
+from flask import request, send_from_directory
 from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, jwt_refresh_token_required, \
     get_jwt_identity, get_raw_jwt
 
@@ -574,3 +574,8 @@ class TrendingLatest(Resource):
         except Exception as e:
             app.logger.debug(e)
             return {'message': 'trending latest product select error'}, 500
+
+
+class GetProductImage(Resource):
+    def get(self,filename):
+        return send_from_directory('', filename)
