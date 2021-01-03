@@ -1,0 +1,33 @@
+[2020-12-27 18:51:55 +0000] [881430] [INFO] Starting gunicorn 20.0.4
+[2020-12-27 18:51:55 +0000] [881430] [INFO] Listening at: http://127.0.0.1:5000 (881430)
+[2020-12-27 18:51:55 +0000] [881430] [INFO] Using worker: sync
+[2020-12-27 18:51:55 +0000] [881444] [INFO] Booting worker with pid: 881444
+[2020-12-27 18:51:55 +0000] [881445] [INFO] Booting worker with pid: 881445
+[2020-12-27 18:51:55 +0000] [881446] [INFO] Booting worker with pid: 881446
+[2020-12-27 18:51:56 +0000] [881445] [DEBUG] this will show in the log
+[2020-12-27 18:51:56 +0000] [881444] [DEBUG] this will show in the log
+[2020-12-27 18:51:56 +0000] [881446] [DEBUG] this will show in the log
+[2020-12-29 11:32:07 +0000] [881430] [INFO] Handling signal: term
+[2020-12-29 11:32:07 +0000] [881444] [INFO] Worker exiting (pid: 881444)
+[2020-12-29 11:32:07 +0000] [881445] [INFO] Worker exiting (pid: 881445)
+[2020-12-29 11:32:07 +0000] [881446] [INFO] Worker exiting (pid: 881446)
+[2020-12-29 11:32:07 +0000] [881430] [INFO] Shutting down: Master
+[2020-12-29 11:32:07 +0000] [967684] [INFO] Starting gunicorn 20.0.4
+[2020-12-29 11:32:07 +0000] [967684] [INFO] Listening at: http://127.0.0.1:5000 (967684)
+[2020-12-29 11:32:07 +0000] [967684] [INFO] Using worker: sync
+[2020-12-29 11:32:08 +0000] [967696] [INFO] Booting worker with pid: 967696
+[2020-12-29 11:32:08 +0000] [967697] [INFO] Booting worker with pid: 967697
+[2020-12-29 11:32:08 +0000] [967698] [INFO] Booting worker with pid: 967698
+[2020-12-29 11:32:08 +0000] [967696] [DEBUG] this will show in the log
+[2020-12-29 11:32:08 +0000] [967697] [DEBUG] this will show in the log
+[2020-12-29 11:32:08 +0000] [967698] [DEBUG] this will show in the log
+[2020-12-29 16:55:35,616] DEBUG in userdetails: time data 'abc' does not match format '%Y-%m-%d'
+[2020-12-29 16:55:35 +0000] [967698] [DEBUG] time data 'abc' does not match format '%Y-%m-%d'
+[2020-12-29 18:08:18,289] DEBUG in connection: Invalid Coupon Code
+CONTEXT:  PL/pgSQL function fncheckcoupon(character varying) line 12 at RAISE
+
+[2020-12-29 18:08:18 +0000] [967696] [DEBUG] Invalid Coupon Code
+CONTEXT:  PL/pgSQL function fncheckcoupon(character varying) line 12 at RAISE
+
+[2020-12-29 18:08:18,290] DEBUG in coupons: 
+[2020-12-29 18:08:18 +0000] [967696] [DEBUG] 
