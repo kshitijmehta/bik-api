@@ -1,9 +1,44 @@
 import os
 import uuid
-
+import functools
 from PIL import Image
-
 from authserver import app
+
+
+def image_transpose_exif(im):
+    """
+    Apply Image.transpose to ensure 0th row of pixels is at the visual
+    top of the image, and 0th column is the visual left-hand side.
+    Return the original image if unable to determine the orientation.
+
+    As per CIPA DC-008-2012, the orientation field contains an integer,
+    1 through 8. Other values are reserved.
+
+    Parameters
+    ----------
+    im: PIL.Image
+       The image to be rotated.
+    """
+
+    exif_orientation_tag = 0x0112
+    exif_transpose_sequences = [                   # Val  0th row  0th col
+        [],                                        #  0    (reserved)
+        [],                                        #  1   top      left
+        [Image.FLIP_LEFT_RIGHT],                   #  2   top      right
+        [Image.ROTATE_180],                        #  3   bottom   right
+        [Image.FLIP_TOP_BOTTOM],                   #  4   bottom   left
+        [Image.FLIP_LEFT_RIGHT, Image.ROTATE_90],  #  5   left     top
+        [Image.ROTATE_270],                        #  6   right    top
+        [Image.FLIP_TOP_BOTTOM, Image.ROTATE_90],  #  7   right    bottom
+        [Image.ROTATE_90],                         #  8   left     bottom
+    ]
+
+    try:
+        seq = exif_transpose_sequences[im._getexif()[exif_orientation_tag]]
+    except Exception:
+        return im
+    else:
+        return functools.reduce(type(im).transpose, seq, im)
 
 
 def save_image(args, *images):
@@ -18,13 +53,14 @@ def save_image(args, *images):
                 image_file.save(os.path.join('authserver/unscaledImages', image_uuid + image_extension))
                 ## Saving reduced size image
                 img = Image.open(os.path.join('authserver/unscaledImages', image_uuid + image_extension))
+                img = image_transpose_exif(img)
                 basewidth = 800
                 wpercent = (basewidth / float(img.size[0]))
                 hsize = int((float(img.size[1]) * float(wpercent)))
                 img = img.resize((basewidth, hsize), Image.ANTIALIAS)
                 # Rotating image is the width > height
-                if basewidth > hsize:
-                    img = img.rotate(90, expand=True)
+                # if basewidth > hsize:
+                #     img = img.rotate(90, expand=True)
                 img.save(os.path.join('authserver/scaledImages', image_uuid + image_extension), optimize=True, quality=95)
 
                 uuids[image_file.filename] = image_uuid + image_extension
