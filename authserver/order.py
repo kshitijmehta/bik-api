@@ -141,6 +141,7 @@ class PaymentSuccessRazorpay(Resource):
                                     "ORDERDATE": date.today().strftime("%m/%d/%Y"),
                                     "PRODUCTIST": product_data['product_list'],
                                     "TOTALAMOUNT": product_data['total_amount'],
+                                    "DISCOUNT":product_data['discount_tr']
                                 }
                             })
                             return {'message': 'success'}, 200
@@ -288,6 +289,7 @@ class PaymentSuccessPaypal(Resource):
                                 "ORDERDATE": date.today().strftime("%m/%d/%Y"),
                                 "PRODUCTIST": product_data['product_list'],
                                 "TOTALAMOUNT": product_data['total_amount'],
+                                "DISCOUNT": product_data['discount_tr']
                             }
                         })
                         return {
@@ -516,6 +518,7 @@ class CheckCODStatus(Resource):
                                 "ORDERDATE": date.today().strftime("%m/%d/%Y"),
                                 "PRODUCTIST": product_data['product_list'],
                                 "TOTALAMOUNT": product_data['total_amount'],
+                                "DISCOUNT": product_data['discount_tr']
                             }
                         })
                         return {'message': 'Payment Success'}, 200
@@ -544,7 +547,8 @@ class GetCustomerOrders(Resource):
 
                 # print(args)
                 result = run_db_query('select order_id, order_totalprice, order_paymentdate, '
-                                      ' payment_type_name, orderitems, order_number, coupon_value, user_discount'
+                                      ' payment_type_name, orderitems, order_number,  standard_shipping,'
+                                      ' coupon_value, user_discount'
                                       ' from store.order_view '
                                       ' where user_id =' + str(args['user_id']) + ' '
                                                                                   ' LIMIT ' + args[

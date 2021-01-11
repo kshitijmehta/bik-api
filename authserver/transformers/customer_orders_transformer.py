@@ -29,6 +29,7 @@ def customer_orders(data):
             'paymentDate': str(orders_obj['order_paymentdate']),
             'paymentMode': orders_obj['payment_type_name'],
             'orderNumber': orders_obj['order_number'],
+            'standardShipping': orders_obj['standard_shipping'],
             'orderItems': order_items,
             'couponDiscount': orders_obj['coupon_value'],
             'userDiscount': orders_obj['user_discount'],

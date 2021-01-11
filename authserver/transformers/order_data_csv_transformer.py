@@ -27,9 +27,9 @@ def order_data_csv_transformer(data):
 def calculate_discount(original_price, user_discount, coupon):
     discounted_price = original_price
     if user_discount:
-        discounted_price = discounted_price - (discounted_price * (user_discount / 100))
+        discounted_price = math.ceil(discounted_price - (discounted_price * (user_discount / 100)))
     if coupon:
-        discounted_price = discounted_price - (discounted_price * (coupon / 100))
+        discounted_price = math.ceil(discounted_price - (discounted_price * (coupon / 100)))
     return math.ceil(discounted_price)
 
 
