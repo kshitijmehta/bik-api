@@ -49,5 +49,7 @@ def get_gst_rate(category):
         return 5
     elif str(category).lower() == 'home essential' or str(category).lower() == 'cosmetics':
         return 18
+    elif str(category).lower() == 'fashion accessories':
+        return 3
     else:
         return 0
