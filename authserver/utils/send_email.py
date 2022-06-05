@@ -14,8 +14,14 @@ def send_email(template_id, payload_data):
             **payload_data['variables'],
             "authkey": secrets['EMAIL_AUTH_KEY'],
             "template_id": template_id,
-            "to": payload_data['to_email'],
-            "from": 'support@basickart.com',
+            "to": {
+                "email": payload_data['to_email']
+            },
+            "from": {
+                "email": 'support@basickart.com'
+            },
+            "domain": "basickart.com",
+            "mail_type_id": "1"
         }
 
         headers = {'content-type': 'application/json'}
