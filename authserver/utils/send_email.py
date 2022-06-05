@@ -11,7 +11,9 @@ def send_email(template_id, payload_data):
     try:
         conn = http.client.HTTPConnection("api.msg91.com")
         payload = {
-            **payload_data['variables'],
+            "variables": {
+                **payload_data['variables']
+                         },
             "authkey": secrets['EMAIL_AUTH_KEY'],
             "template_id": template_id,
             "to": [{
