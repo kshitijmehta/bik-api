@@ -14,9 +14,9 @@ def send_email(template_id, payload_data):
             **payload_data['variables'],
             "authkey": secrets['EMAIL_AUTH_KEY'],
             "template_id": template_id,
-            "to": {
+            "to": [{
                 "email": payload_data['to_email']
-            },
+            }],
             "from": {
                 "email": 'support@basickart.com'
             },
@@ -25,7 +25,7 @@ def send_email(template_id, payload_data):
         }
 
         headers = {'content-type': 'application/json'}
-        conn.request('POST', '/api/v5/email', json.dumps(payload), headers)
+        conn.request('POST', '/api/v5/email/send', json.dumps(payload), headers)
         print(payload)
         res = conn.getresponse()
         data = res.read()
